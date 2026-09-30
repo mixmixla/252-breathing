@@ -27,9 +27,16 @@
 
 ### 一次性构建
 ```
-build.bat        # Windows
-./build.sh       # Git Bash / Linux
+build.bat        # Windows —— ⚠️ 只跑 17 道门禁且不检查退出码，见下方 §1 的警告
+./build.sh       # Git Bash / Linux —— ⚠️ 同上；且当前编译段缺 core/content 与 core/net
+python build_runner.py   # ✅ 完整构建：82 道门禁 + 5 段编译 + 审计 = 88 处 *_EXIT
 ```
+
+> 🔧 **2026-09-30 修**：`build_runner.py` 与 `audit_invariants.py` 原先把仓库根写死成
+> 开发机的绝对路径（`C:\Users\Administrator\...`）⇒ **别人 clone 到别处根本跑不了**（更糟的是那台
+> 机器路径还在时会**静默对另一个工作副本**执行构建）。现已改为
+> **`BW_ROOT`（显式覆盖）或脚本所在目录**，并加**仓库身份校验**（找不到 `src/core/world/World.java`
+> 就 `[FATAL]` + 非 0 退出）。
 输出 `BUILD OK` 即成功（产物在 `out/`）。
 
 ### 跑真 3D 游戏（你本机）
@@ -84,6 +91,13 @@ java -cp out ShaderCheck                        # 2026-09-18 内联 GLSL 离屏�
 > 📊 全部门禁名 + 耗时排行见 `build_report.txt` 的 `=== GATE TIMINGS ===` / `=== COMPILE TIMINGS ===`。
 > ⚡ 想提速：`BW_JOBS=4 python build_runner.py`（实测 117s → 43s，且与串行**逐行等价**；默认 1）。
 `build.bat` / `build_runner.py` 编译后会自动跑全部，全 `PASS` 才输出 `BUILD OK`。
+
+> ⚠️ **上面这句曾经是错的，2026-09-30 更正 —— 而且这个错误很危险：**
+> **`build.bat` 不是完整验证入口。** 实测它：① 在**跑测试之前**就打印 `BUILD OK.`；
+> ② 只跑 **17 道**门禁（主构建器是 82 道）；③ 每个测试后**没有检查退出码**；
+> ④ 末尾**无条件**打印 `ALL 17 GATES DONE.`。
+> ⇒ **它红了你也看不出来。** 想认真验证请用 `python build_runner.py` 并按 §1 的数 `*_EXIT` 方法检查。
+> （`build.bat` 只作为"编译 + 快速冒烟"的重入口；它的整改属 T01，见 `docs/BUGFIX_PLAN_2026-09-30.md`）
 - `DeterminismTest`：同种子同输入 → 仿真指纹一致（基线 `74ad826636fe8eb2`）
 - `ZeroDriftTest`：渲染乱用 fxRng 不影响 sim 指纹（sim/render 隔离；基线 `5ce9392207387ebf`）
 - `PhysicsTest`：玩家行走物理 headless 验证（落地不穿地 / 跳跃峰值 ~1.25 格 / 撞墙不穿）

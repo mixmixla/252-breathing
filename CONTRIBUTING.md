@@ -13,11 +13,16 @@ git clone https://github.com/mixmixla/252-breathing.git
 cd 252-breathing
 
 # 一次性构建（Windows）
-build.bat
+build.bat            # ⚠️ 只跑 17 道门禁、且不检查每个测试的退出码 ⇒ 红了你也看不出来
+python build_runner.py   # ✅ 完整验证走这个（82 道门禁 + 5 段编译 + 审计 = 88 处 *_EXIT）
 
 # 跑游戏
 run-game.bat
 ```
+
+> ⚠️ **别信 `build.bat` 的 `BUILD OK`。** 实测它：`BUILD OK.` 打印在**跑测试之前**、
+> 只跑 **17 道**（主构建器 82 道）、每个 `java ...Test` 后**没有 `if errorlevel`**、
+> 末尾**无条件** `ALL 17 GATES DONE.`。它只适合当"编译 + 快速冒烟"的快捷键。
 
 **环境要求**：JDK **8**（项目用 Java 8 语法，无 `var` / `record` / `String.strip()`）、显卡支持 OpenGL 3.3+。
 `libs/` 里已经带了全部依赖 jar（LWJGL / JOML / Gson / JNA），**不需要自己配依赖**。

@@ -1,6 +1,27 @@
 import os, sys, subprocess, glob, shutil, time
 
-ROOT = r"C:\Users\Administrator\Documents\trae_projects\AI\learn_demos\252_模拟世界游戏_会呼吸的世界\java\breathing-world"
+
+def _resolve_root():
+    """仓库根 = `BW_ROOT`（显式覆盖）或**本脚本所在目录**。
+
+    2026-09-30 修（B02）：原值是开发机绝对路径 `C:\\Users\\Administrator\\...`，
+    后果有两层 —— ① 别人 clone 到别的路径后根本跑不起来；
+    ② **更糟的是**：若那台机器上该路径仍然存在，会静默地**对另一个工作副本**执行审计/构建。
+    故改为以脚本位置为准，并在此**校验仓库身份**：报错永远好过静默跑错目录。
+    """
+    explicit = os.environ.get("BW_ROOT")
+    root = os.path.abspath(explicit) if explicit else os.path.dirname(os.path.abspath(__file__))
+    if not os.path.isfile(os.path.join(root, "src", "core", "world", "World.java")):
+        sys.stderr.write(
+            "[FATAL] 仓库根校验失败：" + root + "\n"
+            "        期望在此找到 src/core/world/World.java。\n"
+            "        BW_ROOT = " + (explicit if explicit else "(未设置，已回退到脚本所在目录)") + "\n"
+            "        请从仓库根目录运行，或把 BW_ROOT 指向正确的仓库根。\n")
+        sys.exit(2)
+    return root
+
+
+ROOT = _resolve_root()
 REPORT = os.path.join(ROOT, "build_report.txt")
 LIBS = ["libs/jna-5.13.0.jar", "libs/gson-2.10.1.jar", "libs/lwjgl-3.3.3.jar", "libs/lwjgl-glfw-3.3.3.jar",
         "libs/lwjgl-opengl-3.3.3.jar", "libs/joml-1.10.5.jar"]

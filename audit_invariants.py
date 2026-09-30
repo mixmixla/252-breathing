@@ -18,8 +18,26 @@
 """
 import io, os, re, sys
 
-ROOT = os.environ.get("BW_ROOT",
-    r"C:\Users\Administrator\Documents\trae_projects\AI\learn_demos\252_模拟世界游戏_会呼吸的世界\java\breathing-world")
+
+def _resolve_root():
+    """仓库根 = `BW_ROOT`（显式覆盖）或**本脚本所在目录**。
+
+    2026-09-30 修（B02）：原默认值是开发机绝对路径 —— 别人 clone 到别的路径后，
+    若那台机器上该路径仍在，就会静默地**对另一个工作副本**执行审计。
+    改为以脚本位置为准 + 仓库身份校验。
+    """
+    explicit = os.environ.get("BW_ROOT")
+    root = os.path.abspath(explicit) if explicit else os.path.dirname(os.path.abspath(__file__))
+    if not os.path.isfile(os.path.join(root, "src", "core", "world", "World.java")):
+        sys.stderr.write(
+            "[FATAL] 仓库根校验失败：" + root + "\n"
+            "        期望在此找到 src/core/world/World.java。\n"
+            "        BW_ROOT = " + (explicit if explicit else "(未设置，已回退到脚本所在目录)") + "\n")
+        sys.exit(2)
+    return root
+
+
+ROOT = _resolve_root()
 SRC = os.path.join(ROOT, "src")
 
 def java_files():
