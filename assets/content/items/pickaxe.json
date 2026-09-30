@@ -1,0 +1,7 @@
+{
+  "name": "Stone Pickaxe",
+  "stack": 1,
+  "durability": 120,
+  "tool": true,
+  "color": "9AA0A8"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Mount Launch",
+  "module": "capture",
+  "event": "mount",
+  "from": "taming",
+  "then": [
+    {
+      "type": "SCREEN_SHAKE",
+      "power": 0.25
+    },
+    {
+      "type": "SPAWN_PARTICLE",
+      "id": "leaf"
+    },
+    {
+      "type": "DIALOGUE",
+      "id": "Mounted"
+    }
+  ],
+  "cooldown": 1.0
+}

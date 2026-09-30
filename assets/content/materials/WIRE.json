@@ -1,0 +1,10 @@
+{
+  "name": "Redstone Wire",
+  "cellType": "solid",
+  "hardness": 0.3,
+  "density": 16,
+  "digParticle": "dust",
+  "tags": [
+    "metal"
+  ]
+}

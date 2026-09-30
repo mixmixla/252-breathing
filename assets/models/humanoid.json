@@ -1,0 +1,66 @@
+{
+  "name": "humanoid",
+  "format": "voxel-parts",
+
+  "skeleton": {
+    "bones": [
+      { "name": "root",   "parent": null,     "pos": [0, 0, 0] },
+      { "name": "pelvis", "parent": "root",   "pos": [0, 0.90, 0] },
+      { "name": "chest",  "parent": "pelvis", "pos": [0, 0.34, 0] },
+      { "name": "head",   "parent": "chest",  "pos": [0, 0.36, 0] },
+      { "name": "armL",   "parent": "chest",  "pos": [0.24, 0.26, 0] },
+      { "name": "handL",  "parent": "armL",   "pos": [0, -0.50, 0] },
+      { "name": "armR",   "parent": "chest",  "pos": [-0.24, 0.26, 0] },
+      { "name": "handR",  "parent": "armR",   "pos": [0, -0.50, 0] },
+      { "name": "legL",   "parent": "pelvis", "pos": [0.12, 0, 0] },
+      { "name": "shinL",  "parent": "legL",   "pos": [0, -0.45, 0] },
+      { "name": "legR",   "parent": "pelvis", "pos": [-0.12, 0, 0] },
+      { "name": "shinR",  "parent": "legR",   "pos": [0, -0.45, 0] }
+    ]
+  },
+
+  "clips": [
+    {
+      "name": "idle", "length": 2.0, "loop": true,
+      "tracks": [
+        { "joint": "chest", "keys": [ { "t": 0, "rot": [0, 0, 0] }, { "t": 1.0, "rot": [2.5, 0, 0] }, { "t": 2.0, "rot": [0, 0, 0] } ] },
+        { "joint": "armL",  "keys": [ { "t": 0, "rot": [0, 0, 6] }, { "t": 1.0, "rot": [3, 0, 8] }, { "t": 2.0, "rot": [0, 0, 6] } ] },
+        { "joint": "armR",  "keys": [ { "t": 0, "rot": [0, 0, -6] }, { "t": 1.0, "rot": [3, 0, -8] }, { "t": 2.0, "rot": [0, 0, -6] } ] },
+        { "joint": "head",  "keys": [ { "t": 0, "rot": [0, 0, 0] }, { "t": 1.2, "rot": [0, 5, 0] }, { "t": 2.0, "rot": [0, 0, 0] } ] }
+      ]
+    },
+    {
+      "name": "walk", "length": 1.0, "loop": true,
+      "tracks": [
+        { "joint": "legL",  "keys": [ { "t": 0, "rot": [28, 0, 0] }, { "t": 0.5, "rot": [-28, 0, 0] }, { "t": 1.0, "rot": [28, 0, 0] } ] },
+        { "joint": "legR",  "keys": [ { "t": 0, "rot": [-28, 0, 0] }, { "t": 0.5, "rot": [28, 0, 0] }, { "t": 1.0, "rot": [-28, 0, 0] } ] },
+        { "joint": "shinL", "keys": [ { "t": 0, "rot": [-12, 0, 0] }, { "t": 0.5, "rot": [10, 0, 0] }, { "t": 1.0, "rot": [-12, 0, 0] } ] },
+        { "joint": "shinR", "keys": [ { "t": 0, "rot": [10, 0, 0] }, { "t": 0.5, "rot": [-12, 0, 0] }, { "t": 1.0, "rot": [10, 0, 0] } ] },
+        { "joint": "armL",  "keys": [ { "t": 0, "rot": [-24, 0, 5] }, { "t": 0.5, "rot": [24, 0, 5] }, { "t": 1.0, "rot": [-24, 0, 5] } ] },
+        { "joint": "armR",  "keys": [ { "t": 0, "rot": [24, 0, -5] }, { "t": 0.5, "rot": [-24, 0, -5] }, { "t": 1.0, "rot": [24, 0, -5] } ] },
+        { "joint": "pelvis","keys": [ { "t": 0, "rot": [0, 0, 0] }, { "t": 0.25, "rot": [0, 0, 3] }, { "t": 0.75, "rot": [0, 0, -3] }, { "t": 1.0, "rot": [0, 0, 0] } ] }
+      ]
+    },
+    {
+      "name": "swing", "length": 0.5, "loop": false,
+      "events": [ { "t": 0.16, "id": 1 } ],
+      "tracks": [
+        { "joint": "armR",  "keys": [ { "t": 0, "rot": [-30, 0, -10] }, { "t": 0.16, "rot": [-62, 0, -22], "ease": 0 }, { "t": 0.5, "rot": [78, 0, 16] } ] },
+        { "joint": "chest", "keys": [ { "t": 0, "rot": [0, 0, 0] }, { "t": 0.16, "rot": [-6, 0, -12] }, { "t": 0.5, "rot": [5, 0, 14] } ] },
+        { "joint": "armL",  "keys": [ { "t": 0, "rot": [0, 0, 8] }, { "t": 0.5, "rot": [-14, 0, 6] } ] }
+      ]
+    }
+  ],
+
+  "parts": [
+    { "joint": "pelvis", "kind": "box", "size": [0.44, 0.30, 0.26], "offset": [0, 0.06, 0], "material": "cloth" },
+    { "joint": "chest",  "kind": "box", "size": [0.46, 0.44, 0.28], "offset": [0, 0.12, 0], "material": "cloth" },
+    { "joint": "head",   "kind": "box", "size": [0.30, 0.30, 0.30], "offset": [0, 0.13, 0], "material": "skin" },
+    { "joint": "armL",   "kind": "box", "size": [0.16, 0.44, 0.16], "offset": [0, -0.22, 0], "material": "skin" },
+    { "joint": "armR",   "kind": "box", "size": [0.16, 0.44, 0.16], "offset": [0, -0.22, 0], "material": "skin" },
+    { "joint": "legL",   "kind": "box", "size": [0.18, 0.46, 0.18], "offset": [0, -0.22, 0], "material": "cloth" },
+    { "joint": "legR",   "kind": "box", "size": [0.18, 0.46, 0.18], "offset": [0, -0.22, 0], "material": "cloth" },
+    { "joint": "shinL",  "kind": "box", "size": [0.16, 0.42, 0.16], "offset": [0, -0.20, 0], "material": "cloth" },
+    { "joint": "shinR",  "kind": "box", "size": [0.16, 0.42, 0.16], "offset": [0, -0.20, 0], "material": "cloth" }
+  ]
+}

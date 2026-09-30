@@ -1,0 +1,45 @@
+{
+  "emitters": [
+    {
+      "particle": "gale_ring",
+      "at": [
+        0,
+        0.3,
+        0
+      ],
+      "delay": 0.0,
+      "burst": true
+    },
+    {
+      "particle": "leaf",
+      "at": [
+        0,
+        0.2,
+        0
+      ],
+      "delay": 0.0,
+      "burst": true
+    },
+    {
+      "particle": "dust",
+      "at": [
+        0,
+        0.05,
+        0
+      ],
+      "delay": 0.04
+    },
+    {
+      "particle": "mote",
+      "at": [
+        0,
+        0.6,
+        0
+      ],
+      "delay": 0.1
+    }
+  ],
+  "sfx": "dash",
+  "shake": 0.15,
+  "duration": 0.5
+}

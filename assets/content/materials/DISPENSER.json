@@ -1,0 +1,10 @@
+{
+  "name": "Dispenser",
+  "cellType": "solid",
+  "hardness": 1.2,
+  "density": 34,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

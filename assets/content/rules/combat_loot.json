@@ -1,0 +1,23 @@
+{
+  "name": "Beast Loot Drop",
+  "module": "survival",
+  "event": "repel",
+  "from": "combat",
+  "then": [
+    {
+      "type": "GRANT_ITEM",
+      "id": "leather",
+      "amount": 1,
+      "delay": 0.1
+    },
+    {
+      "type": "SPAWN_PARTICLE",
+      "id": "dust"
+    },
+    {
+      "type": "PLAY_SFX",
+      "id": "loot"
+    }
+  ],
+  "cooldown": 0.2
+}

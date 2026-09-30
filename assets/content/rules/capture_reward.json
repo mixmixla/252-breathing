@@ -1,0 +1,28 @@
+{
+  "name": "Captured Beast Reward",
+  "module": "capture",
+  "event": "capture",
+  "from": "taming",
+  "if": [
+    {
+      "check": "CHANCE",
+      "value": 0.75
+    }
+  ],
+  "then": [
+    {
+      "type": "SPAWN_PARTICLE",
+      "id": "spark"
+    },
+    {
+      "type": "GRANT_ITEM",
+      "id": "ember_shard",
+      "amount": 1
+    },
+    {
+      "type": "DIALOGUE",
+      "id": "Captured"
+    }
+  ],
+  "cooldown": 0.5
+}

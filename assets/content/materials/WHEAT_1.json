@@ -1,0 +1,10 @@
+{
+  "name": "Wheat Shoot",
+  "cellType": "plant",
+  "hardness": 0.08,
+  "density": 2,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Observer",
+  "cellType": "solid",
+  "hardness": 1.25,
+  "density": 35,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

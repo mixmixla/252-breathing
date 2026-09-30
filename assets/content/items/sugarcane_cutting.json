@@ -1,0 +1,15 @@
+{
+  "name": "Sugarcane Cutting",
+  "stack": 64,
+  "color": "96AA5A",
+  "block": "SUGARCANE_0",
+  "alsoDropsFrom": [
+    "SUGARCANE_1"
+  ],
+  "sowOn": [
+    "SAND",
+    "DIRT",
+    "GRASS"
+  ],
+  "sowNearWater": true
+}

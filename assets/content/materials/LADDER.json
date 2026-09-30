@@ -1,0 +1,10 @@
+{
+  "name": "Ladder",
+  "cellType": "solid",
+  "hardness": 0.4,
+  "density": 8,
+  "digParticle": "dust",
+  "tags": [
+    "wood"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Reed",
+  "cellType": "plant",
+  "hardness": 0.03,
+  "density": 3,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

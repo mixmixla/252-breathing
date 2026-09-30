@@ -1,0 +1,10 @@
+{
+  "name": "Scaffolding",
+  "cellType": "solid",
+  "hardness": 0.4,
+  "density": 10,
+  "digParticle": "dust",
+  "tags": [
+    "wood"
+  ]
+}

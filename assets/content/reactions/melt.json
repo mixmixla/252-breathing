@@ -1,0 +1,7 @@
+{
+  "name": "Melt Ice And Snow",
+  "in1": "[ice]",
+  "in2": "[fire]",
+  "out1": "WATER",
+  "probability": 0.60
+}

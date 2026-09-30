@@ -1,0 +1,11 @@
+{
+  "name": "Brick Slab",
+  "cellType": "solid",
+  "hardness": 0.39,
+  "density": 22,
+  "digParticle": "dust",
+  "lightDecay": 0.8,
+  "tags": [
+    "stone"
+  ]
+}

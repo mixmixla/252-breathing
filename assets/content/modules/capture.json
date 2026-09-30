@@ -1,0 +1,11 @@
+{
+  "name": "Capture",
+  "description": "捕捉驯养：削弱野兽后收编，可骑乘、可协战",
+  "requires": [
+    "emergence"
+  ],
+  "params": {
+    "hpThreshold": 0.3,
+    "orbItemCost": 1
+  }
+}

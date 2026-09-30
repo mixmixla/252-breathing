@@ -1,0 +1,30 @@
+{
+  "name": "Steel",
+  "requires": [
+    "smelting"
+  ],
+  "minProsperity": 20,
+  "station": "kiln",
+  "cost": {
+    "iron_bar": 2,
+    "coal": 4
+  },
+  "unlocks": [
+    "steel",
+    "steel_tools"
+  ],
+  "effects": [
+    {
+      "type": "PLAY_SFX",
+      "id": "unlock"
+    },
+    {
+      "type": "SCREEN_SHAKE",
+      "power": 0.2
+    },
+    {
+      "type": "DIALOGUE",
+      "id": "Steel unlocked"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Smelting",
+  "requires": [
+    "mining",
+    "kiln"
+  ],
+  "minProsperity": 12,
+  "station": "kiln",
+  "cost": {
+    "ore": 3,
+    "coal": 2
+  },
+  "unlocks": [
+    "iron_bar",
+    "smelting"
+  ],
+  "effects": [
+    {
+      "type": "PLAY_SFX",
+      "id": "levelup"
+    },
+    {
+      "type": "DIALOGUE",
+      "id": "Smelting unlocked"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Iron Ore",
+  "cellType": "solid",
+  "hardness": 1.05,
+  "density": 30,
+  "digParticle": "dust",
+  "tags": [
+    "stone",
+    "ore"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Coal Ore",
+  "cellType": "solid",
+  "hardness": 1.05,
+  "density": 24,
+  "digParticle": "dust",
+  "tags": [
+    "stone",
+    "ore"
+  ]
+}

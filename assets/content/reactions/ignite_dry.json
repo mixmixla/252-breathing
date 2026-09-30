@@ -1,0 +1,7 @@
+{
+  "name": "Ignite Dry Plants",
+  "in1": "[dry]",
+  "in2": "[fire]",
+  "out1": "FIRE",
+  "probability": 0.35
+}

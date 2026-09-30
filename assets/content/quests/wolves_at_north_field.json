@@ -1,0 +1,27 @@
+{
+  "title": "北田的灰狼",
+  "nodes": [
+    {
+      "id": "start",
+      "text": "村北的田又被糟蹋了。",
+      "on": {
+        "type": "kill",
+        "beast": "ash_wolf",
+        "count": 3
+      },
+      "next": "done"
+    },
+    {
+      "id": "done",
+      "text": "村子欠你一份人情。",
+      "effects": [
+        {
+          "type": "GRANT_ITEM",
+          "id": "ember_shard",
+          "amount": 5
+        }
+      ],
+      "next": null
+    }
+  ]
+}

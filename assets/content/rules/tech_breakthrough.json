@@ -1,0 +1,20 @@
+{
+  "name": "Tech Breakthrough",
+  "module": "survival",
+  "event": "unlock",
+  "from": "tech",
+  "then": [
+    {
+      "type": "PLAY_SFX",
+      "id": "charge"
+    },
+    {
+      "type": "SPAWN_PARTICLE",
+      "id": "spark"
+    },
+    {
+      "type": "DIALOGUE",
+      "id": "New blueprint unlocked"
+    }
+  ]
+}

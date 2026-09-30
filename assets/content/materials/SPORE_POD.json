@@ -1,0 +1,10 @@
+{
+  "name": "Spore Pod",
+  "cellType": "plant",
+  "hardness": 0.05,
+  "density": 4,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Volcanic Ash",
+  "cellType": "powder",
+  "hardness": 0.25,
+  "density": 14,
+  "digParticle": "dust",
+  "tags": [
+    "soil"
+  ]
+}

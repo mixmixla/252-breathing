@@ -1,0 +1,10 @@
+{
+  "name": "Mossy Stone Brick",
+  "cellType": "solid",
+  "hardness": 1.15,
+  "density": 26,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

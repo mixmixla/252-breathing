@@ -1,0 +1,36 @@
+{
+  "name": "Flame Burst",
+  "anim": "attack",
+  "cost": 22,
+  "cooldown": 1.4,
+  "targeting": {
+    "shape": "sphere",
+    "radius": 4.0,
+    "maxTargets": 6
+  },
+  "effects": [
+    {
+      "type": "PLAY_SFX",
+      "id": "charge"
+    },
+    {
+      "type": "DAMAGE",
+      "amount": 26,
+      "target": "TARGET"
+    },
+    {
+      "type": "SPAWN_FX",
+      "id": "flame_burst",
+      "at": "TARGET",
+      "delay": 0.12
+    },
+    {
+      "type": "APPLY_BUFF",
+      "id": "burning",
+      "duration": 4.0
+    }
+  ],
+  "tier": 1,
+  "requires": [],
+  "costSouls": 0
+}

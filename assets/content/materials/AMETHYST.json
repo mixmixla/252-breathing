@@ -1,0 +1,10 @@
+{
+  "name": "Amethyst",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 24,
+  "digParticle": "mote",
+  "tags": [
+    "light"
+  ]
+}

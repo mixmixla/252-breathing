@@ -1,0 +1,10 @@
+{
+  "name": "Cauldron",
+  "cellType": "solid",
+  "hardness": 1.2,
+  "density": 36,
+  "digParticle": "dust",
+  "tags": [
+    "metal"
+  ]
+}

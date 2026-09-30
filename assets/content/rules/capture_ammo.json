@@ -1,0 +1,20 @@
+{
+  "name": "Capture Ammo Drop",
+  "module": "capture",
+  "event": "repel",
+  "from": "combat",
+  "if": [
+    {
+      "check": "CHANCE",
+      "value": 0.5
+    }
+  ],
+  "then": [
+    {
+      "type": "GRANT_ITEM",
+      "id": "orb",
+      "amount": 1
+    }
+  ],
+  "cooldown": 0.2
+}

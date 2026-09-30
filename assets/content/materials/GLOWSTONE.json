@@ -1,0 +1,10 @@
+{
+  "name": "Glowstone",
+  "cellType": "solid",
+  "hardness": 0.6,
+  "density": 24,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Lapis Ore",
+  "cellType": "solid",
+  "hardness": 1.1,
+  "density": 30,
+  "digParticle": "dust",
+  "tags": [
+    "stone",
+    "ore"
+  ]
+}

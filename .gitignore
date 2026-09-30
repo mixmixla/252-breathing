@@ -1,0 +1,65 @@
+# ===== 编译产物（由 build_runner.py 重新生成，不纳入版本控制） =====
+out/
+out/**/*.class
+
+# ===== 构建 / 诊断日志（运行时生成，易变） =====
+*.log
+build_report.txt
+build_runner_stdout.txt
+build_out.txt
+audit_diff*.log
+audit_report.log
+render_diag.log
+game_diag.log
+dialogue.log
+chronicle.log
+qa_playtest.log
+
+# ===== 操作系统 / 编辑器临时文件 =====
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
+*.bak
+
+# ===== IDE =====
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+
+# ===== 旧 CFR 备份（若误放回项目内，不应纳入版本控制） =====
+*cfr_backup*
+
+# ===== Windows 保留设备名 phantom（非真实文件，git 无法索引） =====
+nul
+
+# ===== 运行时 / 生成产物 =====
+save/
+save/**/*
+proof/
+srcs.txt
+
+# ===== Python 缓存（tools/ 下的分析脚本会生成） =====
+__pycache__/
+*.pyc
+*.pyo
+
+# ===== 旧构建产物快照（已被 out/ 取代） =====
+out_base/
+
+# ===== 工具内部数据（Agent 记忆 / 会话状态，不是游戏源码） =====
+.workbuddy/
+
+# ===== 仓库根下的草稿脚本 =====
+# 约定：以 `_` 开头的 .py 是「一次性临时脚本」，不入库；
+#      要长期保留的工具请放 tools/ 并用不带下划线的名字。
+/_*.py
+
+# ===== 临时输出 =====
+*.tmp
+_fpsdiag.out
+_gh_*.json

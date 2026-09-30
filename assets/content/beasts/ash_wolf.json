@@ -1,0 +1,19 @@
+{
+  "name": "Ash Wolf",
+  "hp": 34,
+  "atk": 7,
+  "speed": 2.6,
+  "behavior": {
+    "aggroRange": 14,
+    "packSize": [
+      2,
+      4
+    ]
+  },
+  "drop": [
+    {
+      "item": "ember_shard",
+      "chance": 0.35
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Bamboo",
+  "cellType": "solid",
+  "hardness": 0.45,
+  "density": 12,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

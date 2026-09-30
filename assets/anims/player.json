@@ -1,0 +1,59 @@
+{
+  "skeleton": {
+    "bones": [
+      { "name": "root",  "parent": null,   "pos": [0, 0, 0] },
+      { "name": "torso", "parent": "root", "pos": [0, 10, 0] },
+      { "name": "head",  "parent": "torso", "pos": [0, 7, 0] },
+      { "name": "armL",  "parent": "torso", "pos": [-5, 5, 0] },
+      { "name": "armR",  "parent": "torso", "pos": [5, 5, 0] },
+      { "name": "legL",  "parent": "root",  "pos": [-2, 0, 0] },
+      { "name": "legR",  "parent": "root",  "pos": [2, 0, 0] }
+    ]
+  },
+  "clips": [
+    {
+      "name": "idle", "length": 2.0, "loop": true,
+      "tracks": [
+        { "joint": "torso", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":1.0,"rot":[1.5,0,0],"ease":1}, {"t":2.0,"rot":[0,0,0],"ease":1} ] },
+        { "joint": "armL",  "keys": [ {"t":0,"rot":[0,0,-4]}, {"t":1.0,"rot":[0,0,-8],"ease":1}, {"t":2.0,"rot":[0,0,-4],"ease":1} ] },
+        { "joint": "armR",  "keys": [ {"t":0,"rot":[0,0,4]},  {"t":1.0,"rot":[0,0,8],"ease":1},  {"t":2.0,"rot":[0,0,4],"ease":1} ] }
+      ]
+    },
+    {
+      "name": "walk", "length": 0.8, "loop": true,
+      "tracks": [
+        { "joint": "legL", "keys": [ {"t":0,"rot":[-35,0,0]}, {"t":0.4,"rot":[35,0,0],"ease":1}, {"t":0.8,"rot":[-35,0,0],"ease":1} ] },
+        { "joint": "legR", "keys": [ {"t":0,"rot":[35,0,0]},  {"t":0.4,"rot":[-35,0,0],"ease":1}, {"t":0.8,"rot":[35,0,0],"ease":1} ] },
+        { "joint": "armL", "keys": [ {"t":0,"rot":[25,0,-6]},  {"t":0.4,"rot":[-25,0,-6],"ease":1}, {"t":0.8,"rot":[25,0,-6],"ease":1} ] },
+        { "joint": "armR", "keys": [ {"t":0,"rot":[-25,0,6]},  {"t":0.4,"rot":[25,0,6],"ease":1},  {"t":0.8,"rot":[-25,0,6],"ease":1} ] },
+        { "joint": "torso","keys": [ {"t":0,"rot":[2,0,0]},    {"t":0.4,"rot":[2,0,0]},             {"t":0.8,"rot":[2,0,0]} ] }
+      ]
+    },
+    {
+      "name": "attack", "length": 0.62, "loop": false,
+      "tracks": [
+        { "joint": "armR", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.2,"rot":[-150,0,10],"ease":1}, {"t":0.3,"rot":[40,0,-5]}, {"t":0.62,"rot":[0,0,0],"ease":1} ] },
+        { "joint": "torso","keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.2,"rot":[-10,0,-25],"ease":1}, {"t":0.3,"rot":[8,0,20]}, {"t":0.62,"rot":[0,0,0],"ease":1} ] },
+        { "joint": "armL", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.3,"rot":[-20,0,0]},             {"t":0.62,"rot":[0,0,0],"ease":1} ] },
+        { "joint": "head", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.2,"rot":[-6,0,0],"ease":1},     {"t":0.62,"rot":[0,0,0],"ease":1} ] }
+      ],
+      "events": [ { "t": 0.28, "id": 1 } ]
+    },
+    {
+      "name": "roll", "length": 0.55, "loop": false,
+      "tracks": [
+        { "joint": "root", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.45,"rot":[360,0,0],"ease":1}, {"t":0.55,"rot":[360,0,0]} ] },
+        { "joint": "torso","keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.2,"rot":[26,0,0],"ease":1},    {"t":0.55,"rot":[0,0,0],"ease":1} ] },
+        { "joint": "armL", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.25,"rot":[-70,0,-10],"ease":1},{"t":0.55,"rot":[0,0,0],"ease":1} ] },
+        { "joint": "armR", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.25,"rot":[-70,0,10],"ease":1}, {"t":0.55,"rot":[0,0,0],"ease":1} ] }
+      ]
+    },
+    {
+      "name": "hurt", "length": 0.35, "loop": false,
+      "tracks": [
+        { "joint": "torso","keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.08,"rot":[-24,6,0],"ease":1}, {"t":0.35,"rot":[0,0,0],"ease":1} ] },
+        { "joint": "head", "keys": [ {"t":0,"rot":[0,0,0]}, {"t":0.1,"rot":[16,0,0],"ease":1},    {"t":0.35,"rot":[0,0,0],"ease":1} ] }
+      ]
+    }
+  ]
+}

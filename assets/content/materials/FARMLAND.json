@@ -1,0 +1,10 @@
+{
+  "name": "Farmland",
+  "cellType": "solid",
+  "hardness": 0.6,
+  "density": 16,
+  "digParticle": "dust",
+  "tags": [
+    "soil"
+  ]
+}

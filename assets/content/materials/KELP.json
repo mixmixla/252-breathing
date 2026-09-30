@@ -1,0 +1,10 @@
+{
+  "name": "Kelp",
+  "cellType": "plant",
+  "hardness": 0.03,
+  "density": 4,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

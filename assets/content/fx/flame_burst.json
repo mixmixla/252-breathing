@@ -1,0 +1,55 @@
+{
+  "emitters": [
+    {
+      "particle": "flame_core",
+      "at": [
+        0,
+        0.4,
+        0
+      ],
+      "delay": 0.0,
+      "burst": true
+    },
+    {
+      "particle": "spark",
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "delay": 0.0,
+      "burst": true
+    },
+    {
+      "particle": "smoke",
+      "at": [
+        0,
+        0.6,
+        0
+      ],
+      "delay": 0.1,
+      "burst": true
+    },
+    {
+      "particle": "cinder",
+      "at": [
+        0,
+        0.2,
+        0
+      ],
+      "delay": 0.15
+    },
+    {
+      "particle": "mote",
+      "at": [
+        0,
+        1.0,
+        0
+      ],
+      "delay": 0.18
+    }
+  ],
+  "sfx": "charge",
+  "shake": 0.35,
+  "duration": 0.8
+}

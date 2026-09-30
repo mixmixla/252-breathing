@@ -1,0 +1,18 @@
+{
+  "name": "Mining",
+  "requires": [],
+  "minProsperity": 5,
+  "unlocks": [
+    "mining"
+  ],
+  "effects": [
+    {
+      "type": "DIALOGUE",
+      "id": "Mining discovered"
+    },
+    {
+      "type": "SPAWN_PARTICLE",
+      "id": "spark"
+    }
+  ]
+}

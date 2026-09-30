@@ -1,0 +1,12 @@
+{
+  "name": "Sapling",
+  "stack": 64,
+  "color": "468234",
+  "block": "SAPLING",
+  "sowOn": [
+    "DIRT",
+    "GRASS",
+    "FARMLAND"
+  ],
+  "sowMinLight": 9
+}

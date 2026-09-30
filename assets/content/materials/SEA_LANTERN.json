@@ -1,0 +1,10 @@
+{
+  "name": "Sea Lantern",
+  "cellType": "solid",
+  "hardness": 0.65,
+  "density": 24,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

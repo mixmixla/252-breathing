@@ -1,0 +1,11 @@
+{
+  "name": "Ember Shard",
+  "stack": 64,
+  "effects": [
+    {
+      "type": "HEAL",
+      "amount": 4,
+      "target": "SELF"
+    }
+  ]
+}

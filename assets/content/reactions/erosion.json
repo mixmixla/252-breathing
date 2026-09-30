@@ -1,0 +1,9 @@
+{
+  "name": "Erosion",
+  "in1": "[liquid]",
+  "in2": "DIRT",
+  "out1": "WATER",
+  "out2": "SAND",
+  "probability": 0.08,
+  "rate": "erosionRate"
+}

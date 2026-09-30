@@ -1,0 +1,10 @@
+{
+  "name": "Clay",
+  "cellType": "solid",
+  "hardness": 0.4,
+  "density": 19,
+  "digParticle": "dust",
+  "tags": [
+    "soil"
+  ]
+}

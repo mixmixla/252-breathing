@@ -1,0 +1,10 @@
+{
+  "name": "Wood",
+  "cellType": "solid",
+  "hardness": 0.85,
+  "density": 12,
+  "digParticle": "dust",
+  "tags": [
+    "wood"
+  ]
+}

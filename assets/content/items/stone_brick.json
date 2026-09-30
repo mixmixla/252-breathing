@@ -1,0 +1,6 @@
+{
+  "name": "Stone Brick",
+  "stack": 64,
+  "color": "808080",
+  "block": "STONE_BRICK"
+}

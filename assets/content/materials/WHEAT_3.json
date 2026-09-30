@@ -1,0 +1,10 @@
+{
+  "name": "Wheat Ripe",
+  "cellType": "plant",
+  "hardness": 0.2,
+  "density": 2,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

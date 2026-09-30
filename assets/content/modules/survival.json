@@ -1,0 +1,9 @@
+{
+  "name": "Survival",
+  "description": "生存基线：昼夜压力、饥饿、温饱、坠伤",
+  "requires": [],
+  "params": {
+    "dayLengthMinutes": 10,
+    "hungerRate": 1.0
+  }
+}

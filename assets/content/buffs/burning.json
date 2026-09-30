@@ -1,0 +1,15 @@
+{
+  "name": "Burning",
+  "duration": 4.0,
+  "tickEvery": 0.5,
+  "modifiers": {
+    "speed": -0.15
+  },
+  "effects": [
+    {
+      "type": "DAMAGE",
+      "amount": 3,
+      "target": "SELF"
+    }
+  ]
+}

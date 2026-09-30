@@ -1,0 +1,11 @@
+{
+  "name": "Lantern",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 18,
+  "digParticle": "spark",
+  "tags": [
+    "light",
+    "metal"
+  ]
+}

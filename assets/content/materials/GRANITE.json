@@ -1,0 +1,10 @@
+{
+  "name": "Granite",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 28,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

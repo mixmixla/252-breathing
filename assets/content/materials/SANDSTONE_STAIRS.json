@@ -1,0 +1,11 @@
+{
+  "name": "Sandstone Stairs",
+  "cellType": "solid",
+  "hardness": 0.22,
+  "density": 24,
+  "digParticle": "dust",
+  "lightDecay": 0.8,
+  "tags": [
+    "stone"
+  ]
+}

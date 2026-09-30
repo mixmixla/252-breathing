@@ -1,0 +1,11 @@
+{
+  "name": "Automation",
+  "description": "工业自动化：产线、电力、无人搬运",
+  "requires": [
+    "survival"
+  ],
+  "params": {
+    "wireRange": 8,
+    "haulRate": 1.0
+  }
+}

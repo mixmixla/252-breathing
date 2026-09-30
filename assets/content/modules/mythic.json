@@ -1,0 +1,8 @@
+{
+  "name": "Mythic",
+  "description": "神话与飞升：修仙、异种、梦境、神谕",
+  "requires": [],
+  "params": {
+    "ascensionThreshold": 100
+  }
+}

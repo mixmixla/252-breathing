@@ -1,0 +1,9 @@
+{
+  "name": "Emergence",
+  "description": "涌现生态：生态链、气候、文明、灾害（我们的护城河）",
+  "requires": [],
+  "params": {
+    "beastCap": 24,
+    "erosionRate": 1.0
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Vines",
+  "cellType": "solid",
+  "hardness": 0.05,
+  "density": 8,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

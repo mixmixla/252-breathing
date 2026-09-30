@@ -1,0 +1,10 @@
+{
+  "name": "Redstone Comparator",
+  "cellType": "solid",
+  "hardness": 0.55,
+  "density": 21,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Snow Layer",
+  "cellType": "solid",
+  "hardness": 0.02,
+  "density": 12,
+  "digParticle": "mote",
+  "lightDecay": 0.88,
+  "tags": [
+    "ice"
+  ]
+}

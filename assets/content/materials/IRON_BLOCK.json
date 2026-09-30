@@ -1,0 +1,10 @@
+{
+  "name": "Iron Block",
+  "cellType": "solid",
+  "hardness": 1.7,
+  "density": 42,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

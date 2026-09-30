@@ -1,0 +1,11 @@
+{
+  "name": "Fire",
+  "cellType": "gas",
+  "hardness": 0.02,
+  "density": 1,
+  "digParticle": "cinder",
+  "tags": [
+    "fire",
+    "light"
+  ]
+}

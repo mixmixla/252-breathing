@@ -1,0 +1,11 @@
+{
+  "name": "Lava",
+  "cellType": "liquid",
+  "hardness": 0.02,
+  "density": 12,
+  "digParticle": "cinder",
+  "tags": [
+    "liquid",
+    "fire"
+  ]
+}

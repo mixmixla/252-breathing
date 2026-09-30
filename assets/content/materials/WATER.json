@@ -1,0 +1,10 @@
+{
+  "name": "Water",
+  "cellType": "liquid",
+  "hardness": 0.02,
+  "density": 10,
+  "digParticle": "mote",
+  "tags": [
+    "liquid"
+  ]
+}

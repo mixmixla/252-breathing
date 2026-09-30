@@ -1,0 +1,8 @@
+{
+  "name": "ClayForm",
+  "in1": "SAND",
+  "in2": "[liquid]",
+  "out1": "CLAY",
+  "out2": "WATER",
+  "probability": 0.02
+}

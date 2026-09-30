@@ -1,0 +1,14 @@
+{
+  "name": "Wheat Seeds",
+  "stack": 64,
+  "color": "C9B26A",
+  "block": "WHEAT_0",
+  "alsoDropsFrom": [
+    "WHEAT_1",
+    "WHEAT_2"
+  ],
+  "sowOn": [
+    "FARMLAND"
+  ],
+  "sowMinLight": 9
+}

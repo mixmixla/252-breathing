@@ -1,0 +1,12 @@
+{
+  "name": "player",
+  "format": "voxel-parts",
+  "parts": [
+    { "joint": "torso", "kind": "box", "size": [9, 12, 5], "offset": [0, -6, 0], "material": "cloth_blue" },
+    { "joint": "head",  "kind": "box", "size": [7, 7, 7],  "offset": [0, -3, 0], "material": "skin" },
+    { "joint": "armL",  "kind": "box", "size": [3, 10, 3], "offset": [0, -5, 0], "material": "cloth_blue" },
+    { "joint": "armR",  "kind": "box", "size": [3, 10, 3], "offset": [0, -5, 0], "material": "cloth_blue" },
+    { "joint": "legL",  "kind": "box", "size": [4, 10, 4], "offset": [0, -5, 0], "material": "cloth_dark" },
+    { "joint": "legR",  "kind": "box", "size": [4, 10, 4], "offset": [0, -5, 0], "material": "cloth_dark" }
+  ]
+}

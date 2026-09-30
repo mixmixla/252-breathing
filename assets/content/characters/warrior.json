@@ -1,0 +1,22 @@
+{
+  "name": "战士",
+  "skin": "#C68642",
+  "hair": "#1A1A1A",
+  "hairStyle": 0,
+  "build": 2,
+  "accent": "#B0413E",
+  "eye": "#2E2E2E",
+  "faceShape": 1,
+  "eyeShape": 2,
+  "browStyle": 2,
+  "noseStyle": 2,
+  "mouthStyle": 1,
+  "age": 0,
+  "height": 2,
+  "tattoo": 0,
+  "beard": 0,
+  "armor": 3,
+  "helmet": 2,
+  "cloak": 0,
+  "bio": "身经百战的雇佣兵，沉默而可靠。"
+}

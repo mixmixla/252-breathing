@@ -1,0 +1,10 @@
+{
+  "name": "Obsidian",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 32,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

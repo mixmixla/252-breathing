@@ -1,0 +1,33 @@
+{
+  "name": "Gale Step",
+  "anim": "roll",
+  "cost": 14,
+  "cooldown": 0.9,
+  "targeting": {
+    "shape": "point",
+    "radius": 1.0,
+    "maxTargets": 1
+  },
+  "effects": [
+    {
+      "type": "PLAY_SFX",
+      "id": "dash"
+    },
+    {
+      "type": "TELEPORT",
+      "amount": 6.0
+    },
+    {
+      "type": "SPAWN_FX",
+      "id": "gale_step",
+      "delay": 0.05
+    },
+    {
+      "type": "SCREEN_SHAKE",
+      "power": 0.15
+    }
+  ],
+  "tier": 1,
+  "requires": [],
+  "costSouls": 0
+}

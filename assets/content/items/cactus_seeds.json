@@ -1,0 +1,13 @@
+{
+  "name": "Cactus Seeds",
+  "stack": 64,
+  "color": "60A05A",
+  "block": "CACTUS_FLOWER_0",
+  "alsoDropsFrom": [
+    "CACTUS_FLOWER_1"
+  ],
+  "sowOn": [
+    "SAND"
+  ],
+  "sowMinLight": 6
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Kiln",
+  "requires": [
+    "mining"
+  ],
+  "minProsperity": 8,
+  "cost": {
+    "stone": 6
+  },
+  "unlocks": [
+    "kiln"
+  ],
+  "effects": [
+    {
+      "type": "DIALOGUE",
+      "id": "Kiln built"
+    }
+  ]
+}

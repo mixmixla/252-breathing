@@ -1,0 +1,558 @@
+{
+  "project": "会呼吸的世界 · Java LWJGL3 版",
+  "updated": "2026-09-17",
+  "open_items": "docs/OPEN_ITEMS.md（唯一待办总览）｜2026-09-14：M3 已落地；N0–N5 联机全收口（N3-2 真实 UDP + 跨 JVM 子进程 hash 逐字节一致 d978824b368f0c71；N4 预测回滚；N5 联机会话接入渲染主循环，46 道门禁全绿）；agent 端余 ① 用户本机 run-game.bat 验收 ② 可选内容缺口（VISION_CHECK §6） ③ 大厅/房间 UI（按需）｜2026-09-16：F4 三试炼地形门落地（TrialSystem.carveGate 刻石环+按能力改写入口：BOMB 石墙封口/GLIDE 缓降入阶/DASH 窄隙长冲；SITE_DIST 外推 48/60/72；逻辑封印 abilityUsed 仍作硬门保底防软锁），五基线指纹已重锁（DET 74ad826636fe8eb2 / ZD 5ce9392207387ebf / NPC afa036e4b0065f35 / TRIAL 8352df75e6dcd359 / MEGA 070a02ddb58ea0eb；STREAMING 87d5bf1cecb4c628 未变）｜2026-09-16：P2-2 涌现杠杆（FLINT 引火→FireSpread/Wildfire 确定性蔓延）落地，新增 FIRELEVER 门禁（peakFire=23 证可达性），47 道门禁全绿，五基线指纹未变）｜2026-09-16：P2-2 收官——火有牙（敌+玩家双向）、水（AQUA 引水灌田）、雷（THUNDER 雷击导电）三杠杆全落地；新增 FIRELEVER/ELEMENTLEVER 门禁，48 道门禁全绿，所有基线指纹未变｜2026-09-16：P2-3 水/玻璃透明落地（Chunk 双 pass 网格拆分 + core.world.FaceCull 剔透规则 + 图集水 alpha 0.60 / 水本色修正），新增 MESHCULL 门禁，49 道门禁全绿，所有基线指纹未变｜2026-09-16：渲染优化——索引化绘制（每四边形 6 顶点→4 顶点+6 索引，几何等价、顶点 -33%），顺带修 rebuildGreedy 分区漏改（死代码潜伏 bug）；新工具 tools/FaceCostProbe 量化：透明剔除仅 +0.9% 面、贪婪合并可省 61.8% 顶点（因 UV 拉伸/FLOWER 十字草/植被色调三阻，暂不开）。49 道门禁全绿，指纹未变｜2026-09-16：画面细腻度批次——修图集尺度事故（TILE_PX 16→64 后花纹未换算：LAMP 黑块/FIRE 半黑/GLASS 框错位/花纹过密过细），统一改图案坐标 + 双层噪声（块面感 + 64px 微糙）+ 负值钳制；MSAA 2x→4x；新增无头自检工具 tools/AtlasDump。49 道门禁全绿，指纹未变｜2026-09-16：A/B/D 三批（动作·战技·技能特效）—— A 批技能链：ContentSystem 首次真正实例化（此前 Game 自建裸 EffectQueue，cast 零调用 → skills/*.json 全是死数据）+ 新增键位 O 切换/P 施放 + targeting 真实现（SkillDef：sphere/radius/maxTargets，此前 simulate(DAMAGE) 是 nearestBeast 单目标硬编码）+ buff 运行时（BuffSystem：APPLY_BUFF 此前掉空分支被静默丢弃，burning 从未生效）；B 批特效专属化：fx 的 emitter at/delay 与复合 sfx 三个键真驱动（新增延迟发射队列）+ 三技能各有专属 fx；D 批战技扩展：第 4 原型 CHARGE（击退 2.0）+ 第 6 把武器 Great Maul，NO_DOMINANCE 30 对仍成立。新增 SKILLCAST 门禁（15 断言）；SYSTEMREG 因第 93 个系统 BuffSystem 重锁 golden（92→93，末尾追加）；50 道门禁 55 处 *_EXIT 全 0；审计 FAIL 0 / WARN 0（按 C8 移出 8 个已接线键）；所有基线指纹逐字节未变｜2026-09-17：**空转参数落地 + 死内容键清零** —— 7 个「空转子系统参数」（erosionRate/ascensionThreshold/haulRate/hungerRate/orbItemCost/hpThreshold/wireRange）全部有真实消费系统（新增 Ascension/Hunger/Wire/Haul/Capture 五系统，93→98）+ 3 个配方键（coal/ore/iron_bar）经 core/content/RecipeBook 显式契约落地 → 审计 CONTENT_KEY_EXEMPT 清空（C8 报未接线 0 个）；新增门禁 SUBSYS(9 断言)/RECIPE(6 断言)；SYSTEMREG 有意重锁（COUNT 93→98、GOLDEN_HASH 9078168720030413075、PRESET_PARAMS 断言反转为「不得再有 ?param= 且参数真落到 WorldConfig」）；**四道仿真指纹逐字节未变（新系统出厂默认 no-op，无需重锁基线）**。顺带修掉两个真问题：① ParticleSim.offset 越界 → 每次 spawn 必崩、FX 门禁长期红灯、游戏内粒子全不显示（根因是 build_runner RC 恒 0 掩盖了门禁红灯）；② 电路电源不能用 FIRE（FireSpreadSystem 每 tick 50% 概率灭火，火源活不过 2 tick）→ 改用 COAL_ORE。引擎调参（实测驱动，含方法论纠错）：第一版 SystemPerfProbe 把系统连续调用 60 次而不推进 tick → RNG 与世界状态冻结 → 假热点（lava 47.6%/flood 22.4%），该探针已删除；改用消融法（core.sim.AblationProbe）+ 既有 tools/SimPerf。正确归因：关掉 ash 一个系统 tick 17.874→4.188ms（省 76.6%），lava 仅 1.7%。根因：setBlock 只 0.3µs（tools/WriteCostProbe），成本在惰性 ensureIndex() 的 CellSet 插入（arraycopy = O(该类型格数)）——nonAirCells 100.6 万格 / typeCells[STONE] 84.9 万格。**已修**：nonAirCells 生产代码从不读 → 惰性重建 → tick median 19.65→5.13ms / p95 28.02→7.75ms（3.8x），DET 未变 + STREAMCHUNK PASS。帧预算重定：MAX_STEPS_PER_FRAME 3→2 + 时间盒 MAX_FRAME_SIM_MS=12.0 + 积压钳制 MAX_ACC_SEC=0.15；SHIFT_CHUNKS_PER_STEP 保持 8；审计 C12 依据同步。踩坑：新加的派生脏标记 nonAirStale 若不进 StateCodec.SKIP 会被编进 netHash → PREDROLLBACK 误报 desync（已把 indexStale 一并 SKIP）。**第二刀已落地**：CellSet 增量插入/删除改为「待加入/待删除覆盖层 + 压实」（摊还 ≈ |基线|/1024，迭代时归并输出，对外契约不变；OVERLAY_LIMIT 由实测扫描定为 1024）→ tick median 19.65→2.01ms（9.8x）/ p95 28.02→4.43ms（6.3x），消融 baseline 17.874→3.458ms，成本不再集中于单点（sand 30.2%/ash 19.8%/pond 18.2%/flood 14.6%）；DET 未变 + STREAMCHUNK PASS。｜2026-09-17（补）：**修投递路径缺口** —— ContentRegistry.modules() 此前全仓零生产调用，模块 params 只有解析没有消费者 → wireRange/hungerRate/orbItemCost 任何预设都送不到 World.config（palworld_like 的 haulRate 1.5 因此永远无电、无人搬运从不发生）。修法：applyPreset 改两层应用（模块参数=默认值，预设参数覆盖；抽出单点 applyParam 保证两来源同一套映射与钳制，未知模块参数也点名 ?modparam=）；breathing_world 显式写 hungerRate 0 保默认==出厂（零漂移）；HungerSystem.DRAIN_PER_TICK 0.05→0.01（rate1.0 时 100 点≈8 分钟，原值 100 秒就扣血）；SUBSYS 增第 9 组 PRESET_DELIVERY（默认==出厂 / 模块参数真送达 / 预设覆盖模块 / 7 键 keysReachable=7/7）。副作用待定：peaceful_valley 启用 survival → 现在也带饥饿（加一行 hungerRate:0 可关）。美术续批（纯渲染层）：雨幕层 drawRainOverlay（240 条斜雨丝，走 EffectQueue.hash01 纯哈希、复用 HUD 2D 四边形通道、不新增 GLSL）+ 雨雾 0.01→0.022 + 夜色下限 0.16→0.20 + 调色 饱和 1.06→1.10/对比 1.06→1.08/暗角 0.80→0.86 + 暂停页世界状态两行。57 处 *_EXIT 全 0；审计 FAIL 0 / WARN 0（24 项）｜2026-09-17（内容扩张第一项）：**小地图**落地 —— 新增 core/content/MapField（纯采样模型：48×48 格地表俯视图 → 24×24 色；颜色直接用 Blocks 自带 r,g,b 世界本色 + 高度明暗 heightShade∈[0.55,1.15]；列顶是水则按水色，否则湖会在图上消失）+ Game.drawMinimap（右上角 96×96，复用 HUD 2D 通道，不新增 GLSL）+ N 键开关（默认开，CONTROLS 已登记，C9 过）。FX 门禁加 MAP 段 5 断言（15→20）：MAP_DET/MAP_CENTER/MAP_WATER/MAP_EDGE/MAP_SHADE。选它的理由：六项候选里唯一纯渲染层（零指纹风险）+ 模型可无头断言，且直接回应玩家报过的「不知道自己在哪」。途中 MAP_SHADE 首跑 FAIL 是断言浮点比较写死（0.55f+0.60f≈1.15000004>1.15f），已改带 1e-6 容差；audit_consumers.py 另抓出 MapField.radiusBlocks() 零调用已删。｜2026-09-17（内容扩张第二项）：**合成台 + 冶炼链可达性修复** —— 挖矿原来用 blockId.toLowerCase() 猜掉落，COAL_ORE→coal_ore、IRON_ORE→iron_ore，而配方要 coal/ore（原来无 block 字段）→ 整条冶炼链不可达。新增 ContentRegistry.itemForBlock 反向索引（item.block 为真相，旧内容回退命名匹配），coal 认领 COAL_ORE、ore 认领 IRON_ORE，删零引用 coal_ore/iron_ore。I 键手搓：RecipeBook.craftable + craft（真实 Game 消费者，富足全扣真产、不足整条不扣料），CONTROLS 补 I CRAFT (HAND)。RECIPE 增 CHAIN_REACHABLE/CRAFT_PAYS_ALL/CRAFT_SELECTS，7 properties；7 指纹不变。",
+  "gates": {
+    "count": 52,
+    "DETERMINISM": "74ad826636fe8eb2",
+    "ZERO_DRIFT": "5ce9392207387ebf",
+    "PHYSICS": "PASS (LAND/JUMP/WALL)",
+    "STREAMING": "87d5bf1cecb4c628",
+    "FIRELEVER": "3baf209965e12040（自比 PASS；五证：蔓延 peakFire=8 + 伤敌 burnA/B=true（走 hitBeast）+ 伤玩家 hazardA/B=true（走 hurtByHazard，i 帧免伤但不误发完美闪避）——火是双向危险；P2-2 涌现杠杆：FLINT 引火→FireSpread/Wildfire 确定性蔓延，零 rng，不消耗 simStream）",
+    "ELEMENTLEVER": "2d769580c7b4693f（自比 PASS；水 AQUA 引水灌田 watered=true——邻水 DIRT 长 LEAF 作物；雷 THUNDER 雷击导电 shocked=true + conducted=true——电流沿连通水域 BFS 传导到远离落点的敌兵（负例护栏）；零 rng）",
+    "MESHCULL": "PASS（12 断言；P2-3 水/玻璃透明：FaceCull 剔透规则——邻居半透明且不同类 → 面可见（水下的地/玻璃后的内壁才有几何）；translucent 标记唯一性仅 WATER/GLASS；不透明邻居仍遮挡的回归线；越界/世界顶按空气）",
+    "per_layer": "NPC afa036e4b0065f35 / SOCIAL 0dc8d8bef2718582 / STORYTELLER e2487a6fd4cc735c / CIVILIZATION·INDIVIDUAL·POLITY·MATTER e10f516dd2055b84 / TRIAL 8352df75e6dcd359 / MEGA 070a02ddb58ea0eb (hashB=f6eb884a0e1015f5) / WEAPON-ART（C3，D 批扩至 4 原型 / 6 武器）· SKILLCAST（A 批：技能链——cast 三道闸 / targeting 命中·截断·负例 / buff DOT·减速·到期）· MENU（C5）· DAYNIGHT（D3）· AUDIO（C4）· MATTER（批次5）· MOD·SKILL·TECH·FX·SYSTEMREG·GAMEPLAY·CONTENT·ANIM（内容平台 P0-P4）· SPAWN·SNEAK·REFUGE（QA 补强）· SAVE（立项F）· INVENTORY（E批）· ANIMCTL·COMBAT（C批12）· BEACON（D批）· CHARACTER（F批）· ANIMLAYERS（C批3，UE5对标）· STREAMCHUNK（M3：分帧等价/索引惰性等价/邻域去O(N²)等价）· PORTABLEMATH（N0：联机可移植性，src/core 禁非 StrictMath 超越函数）· NETCODEC（N1：联机输入编解码，6 字节协议/无损往返/拒绝而非截断/惰性证明）· SNAPSTATE（N2-0：快照完备性分类，反射穷尽分类 72+40 字段/桶互斥/缺口基线）· NETSNAP（N2-1：紧致快照，字节预算/压缩比/稀疏性/结构等价/双一致）· ROLLBACK（N2-2·N2-3：原地恢复+回滚黄金判据）· NETDESYNC（N3-0：desync 检测宽哈希）· NETLOCK（N3-1：锁步协议层）· UDPLOCK（N3-2：真实 UDP+跨 JVM 子进程）· PREDROLLBACK（N4：预测回滚，延迟 D=4 终态==纯锁步/预测真错→真回滚/确定性重演/基线已缓存）· NETINTEG（N5：会话驱动完整整 tick 跨实例收敛 + 忠实包装会话==直接 world.tick 演化 + TickBody 注入）· SUBSYS（2026-09-17 空转参数落地：DEFAULT_NOOP / 每参数有牙断言 + 负例 / PARAM_RESET）· RECIPE（2026-09-17 冶炼产业链显式契约：真实物品 / 键集合 / 可结算 / 真扣真产 / 不足则整条不结算 / 未知键响亮）——以上均为性质断言，非指纹",
+    "note": "2026-09-14 实测：43 道门禁出口全绿（47 处 *_EXIT 全 0）。另：N1 联机输入编解码已落地——core/net/IntentCodec.java（Intent ⇄ 6 字节：type u8 + dx i8 + dz i8 + yaw u16 + blockIdx u8，显式大端）+ InputFrame.java（一 tick 全玩家输入，playerIds 严格升序=确定序）；Player.Intent 新增 yaw 线路字段（仿真不读=零漂移）+ of() 工厂；build_runner 新增 src/core/net 编译段。门禁 NETCODEC 14 项断言全绿，四基线指纹逐字节未变。 另（N2 前置，2026-09-14）：实测推翻 N2 原方案——复用 World.save/load 做内存快照不可行（快照 22.3 MB / 实体层 npcs+shrines 不持久化 / 读档后继续演化 hash 分叉）；顺带修掉 2 个真实立项 F bug：① 读档必崩（TrialSystem 只在 tick==1 布点而 load 不跑 tick → sites.get(i) 越界）；② 读档后世界冻结（Simulation(World) 漏注册 92 系统）。两者此前被门禁掩盖（旧 SaveLoadTest 用裸 World，系统数 0）——已补真实 Simulation 路径场景 2 + KNOWN-GAP 可见化输出。44 道门禁 48 处 *_EXIT 全 0，四基线指纹逐字节未变。 另（N2-0，2026-09-14）：新增第 39 道门禁 SNAPSTATE（core/sim/SnapshotStateTest）——用反射把 World(72 字段) 与 Player(40 字段) 的每一个实例字段强制归入 PERSISTED/PARTIAL/GAP/DERIVED/DIAG/CONST 六桶，断言穷尽分类+桶互斥+防假绿+缺口基线；实测未持久化字段合计 57（World GAP 21 + PARTIAL 8，Player GAP 28），其中 PARTIAL 最危险（对象看起来已覆盖）。全量 44 道门禁 48 处 *_EXIT 全 0，四基线指纹逐字节未变。 另（N2-0 完成，2026-09-14）：新增 core/net/StateCodec（反射式状态编解码器）+ save/load ext v5（World 63 + Player 38 字段 + 92 系统实例状态）；**双一致达成** —— SAVEL-GATE doubleConsistency=true（读档后再演化 120 tick hash 逐字节相同），并经双进程隔离实验排除跨实例干扰。**架构级发现：状态不只在 World 上**（WindSystem 持有 private int t/gustX/gustZ，读档后 t 归零导致风向立刻不同）。SNAPSTATE 改为与 codec 同源（门禁只维护「跳过字段+理由」表）。N2 计划已收口（2026-09-14）：N2-1 紧致快照 = 窗口内编辑改为「与 seed 确定性地形基线的稀疏差分」（实测 22.25 MB → 317 KB，70x）+ 新增第 40 道门禁 NETSNAP；N2-2 原地恢复 = World.restoreInPlace(byte[]) 写回同一实例（不 new World/不重注册系统，先强制重建基线再叠差分）+ N2-3 回滚黄金判据「跑N→回滚RB→修正跑到N == 一开始就修正跑到N」通过 + 新增第 43 道门禁 ROLLBACK。途中修掉三个「不会让门禁变红」的坑：① 派生字段（surfaceCells 651KB/surfaceY 130KB/surfaceTopY 130KB/waterSurfaceCells 5.5KB = v5 段 69%）被当成状态写入 → 补 DERIVED_FIELDS_NOT_PERSISTED 断言；② SKIP 按纯字段名 = 全局匹配会静默跳掉别类同名字段（ContentSystem.registry 等）→ 改为类限定名；③ 无幽灵条目断言（字段改名后 SKIP 条目不会永远留着）。另：N0 联机可移植性硬化已落地——src/core 内 56 处非 StrictMath 超越函数调用全部改为 StrictMath（16 个文件），新增第 37 道门禁 PORTABLEMATH（清洁性 + 扫描下限 + 正样本对照三重防假绿）；四基线指纹逐字节未变（该迁移在本机 JVM 上行为保持）。M3「大世界规模流畅」已落地并达标：① 索引表示 TreeSet<int[]> → 升序平铺 int[]（去 301ms 比较器税）+ setBlock 增量补丁缓冲 + rebuildIndex 三趟扫描合一 + INDEX 阶段分帧（stepShift phase4 切 x 条带）；② SocialSystem 邻域 O(N²) → 均匀网格 3×3。实测单帧最坏 508ms → 11.5ms（44x）、COMMIT 帧 677ms → 2.67ms、smoothness gain 1.3x → 11.8x。契约变更：isShifting() 期间渲染层须暂停 tick（Game.loop 已接线），门禁走同步 streamTo 语义不变。四道基线指纹逐字节不变（M3 全为派生状态改造，不进 hashState）。 另（N3-0/N3-1，2026-09-14）：新增第 42 道门禁 NETDESYNC（desync 检测宽哈希 netHash：hashState + StateCodec.encode(world) + 各系统 encode，与快照同源 → 新增字段自动纳入；断言同源一致/宽于 hashState/敏感/惰性/成本预算 7 项，实测单次 21ms）+ 第 43 道门禁 NETLOCK（锁步会话协议层：Transport 抽象 + LoopbackTransport 可调延迟 + LockstepSession——帧序/缺帧不推进/输入延迟只是调度旋钮 D=0 与 D=3 同终态/补录历史被拒/篡改一字节两端都检出 desync）。边界：World.player 单数，多玩家意图应用由 InputSink 注入（N4 补）；UDP/TCP 传输后续实现同一 Transport 即可。"
+  },
+  "tasks": [
+    {
+      "id": "SUBSYS-CONTENT-WIRING",
+      "title": "空转参数落地 + 死内容键清零 + 引擎调参 + 美术续批",
+      "owner": "systems-designer / gameplay-programmer / technical-director",
+      "status": "DONE (code) — 待本机 GL 目视验收（雨幕/调色）",
+      "deliverables": [
+        "7 个空转子系统参数全部有消费方：erosionRate→ErosionSystem（只缩放概率不改抽样次数）；ascensionThreshold→AscensionSystem（新）；haulRate→HaulSystem（新，需电力）；hungerRate→HungerSystem（新）；orbItemCost+hpThreshold→CaptureSystem（新）；wireRange→WireSystem（新）",
+        "新增 5 个系统全部追加在注册序末尾 + 出厂默认 update() 首行返回（零 RNG 零写入）→ 既有 93 个系统相对顺序与演化逐字节不变",
+        "WorldConfig 落点：World.config + StateCodec.SKIP + SnapshotStateTest.SKIP_DOC（RECORDED_SKIPPED 26→27）；Simulation.applyPreset 真消费 7 键 + 开头 world.config.reset() 防跨预设泄漏",
+        "core/content/RecipeBook：ore 3 + coal 2 → iron_bar 1 显式契约；TechTree 经它校验，未知键进 recipeIssues（响亮不静默）",
+        "玩家入口 Y=投捕捉球（Game.queuedCapture → CaptureSystem.tryCapture）+ MenuModel.CONTROLS 登记 + 审计 KEYCODE_NAME 补 89:Y；新物品 items/orb.json + 新规则 rules/capture_ammo.json",
+        "新门禁 SUBSYS（9 断言）与 RECIPE（6 断言）；SYSTEMREG 有意重锁（COUNT 93→98 / GOLDEN 9078168720030413075 / PRESET_PARAMS 断言反转）",
+        "审计：CONTENT_KEY_EXEMPT 清空；新增 C12 帧预算锁值；KEYCODE_NAME 补 Y",
+        "引擎调参：MAX_STEPS_PER_FRAME 5→3 + MAX_FRAME_SIM_MS=12.0 时间盒 + MAX_ACC_SEC=0.15 积压钳制；SHIFT_CHUNKS_PER_STEP 保持 8；新增人工探针 core.sim.PerfProbe / SystemPerfProbe",
+        "美术（纯渲染层）：Game.drawRainOverlay 雨幕层（EffectQueue.hash01 纯哈希、复用 HUD 2D 通道、不新增 GLSL）+ 雨雾/夜色下限/调色常量 + 暂停页世界状态两行",
+        "修 bug：ParticleSim.offset 越界（每次 spawn 必崩、FX 门禁长期红灯、游戏内粒子全不显示）；电路电源由 FIRE 改 COAL_ORE（FireSpread 每 tick 50% 灭火）"
+      ],
+      "gate": "PASS (52 道门禁 / 57 处 *_EXIT 全 0；审计 FAIL 0 / WARN 0；四道仿真指纹逐字节未变)"
+    },
+    {
+      "id": "PROG-BUILD",
+      "title": "P2-A 养成 build/配装深度 + souls 真实消费出口",
+      "owner": "gameplay-programmer / systems-designer",
+      "status": "DONE",
+      "deliverables": [
+        "Player.java: 属性 str/dex/vit/end + 装备槽 weapon/armor/charm + 装备目录常量",
+        "Player.recompute(): 由 属性+装备 合成 maxHp=20+vit*5+(lv-1)*5+hpBonus / atk=8+str*2+(lv-1)*1+atkBonus / maxStamina=80+end*10+stamBonus / artCdMax",
+        "Player.investSoul(attr): 成本 30+pointsSpent*10，消费 souls 提升 STR/VIT/END/DEX",
+        "Player.onKill(): 保留 souls+8 / xp+12 / killCount++ + 确定性掉落自动晋级更好装备(写 lootLog+log)",
+        "纯模拟层状态，玩家实体不进 hashState，零漂移安全"
+      ],
+      "gate": "PASS (四门禁指纹不变)"
+    },
+    {
+      "id": "ZELDA-ABILITY",
+      "title": "P2-B 塞尔达式 能力→探索→回报 循环 + 祭坛实体",
+      "owner": "systems-designer / gameplay-programmer",
+      "status": "DONE",
+      "deliverables": [
+        "World.Shrine 实体(x/y/z/ability/name/claimed)，构造器 public（跨包可访问）",
+        "ShrineSystem.java: tick==1 用 w.simStream(\"shrine:place\") 确定性放置 3 座祭坛(GLIDE/DASH/BOMB)",
+        "玩家 3 格内且未觉醒 → grantAbility + souls+20 + prosperity+1 + recordMemory",
+        "Simulation.registerDefaultSystems() 末位追加 ShrineSystem（固定迭代序）",
+        "Player.physicsTick 加 glide 参数：仅 abilities.contains(\"GLIDE\") 时空中缓降",
+        "Player.dodgeRoll 支持 DASH（更长/更短CD/更长i帧）；Player.bomb 需 BOMB 能力",
+        "simStream 非消耗派生流 → 不改主 rng 状态 → DETERMINISM 指纹不变 ad9e7b31"
+      ],
+      "gate": "PASS (DETERMINISM 指纹不变)"
+    },
+    {
+      "id": "ART-PROG",
+      "title": "P3 程序化美术（方向光 / 描边 / 粒子）",
+      "owner": "creative-director / technical-director",
+      "status": "DONE (code) — 待本机 GL 目视验收",
+      "deliverables": [
+        "Chunk.java: 9-float 顶点(pos+col+normal)，SHADE 统一 1.0，emitQuad 输出法线",
+        "Game.initWorldShader(): VS aPos+aCol+aNormal → FS lambert l=0.55+0.45*max(dot(N,L),0)，uLightDir=(0.45,1.0,0.35)",
+        "drawEntities 两遍：Pass1 反相外壳描边(POLYGON_OFFSET_FILL) + Pass2 本体(角色/敌兵/祭坛光柱/粒子)",
+        "Particle 类 + spawnSoulMotes/spawnDust/spawnSparks/updateParticles（均用 fxRng，渲染层）",
+        "渲染层改动不进 sim 指纹 → 四门禁零影响"
+      ],
+      "gate": "PASS (render 层编译通过；门禁只跑 World.tick，不受影响)"
+    },
+    {
+      "id": "ART-PROG-2",
+      "title": "P3 程序化美术 · 美术总监二期（Art Bible + AO/接触阴影 + 天空/雾 + 植被风动）",
+      "owner": "art-director / technical-director",
+      "status": "DONE (code) — 待本机 GL 目视验收",
+      "deliverables": [
+        "docs/ART_BIBLE.md：视觉圣经（视觉支柱/调色板/光照/材质/三项扩展规格/零漂移铁律）",
+        "Blocks.java：Block 加 wind 字段，LEAF/FLOWER 标记 wind=true（field-only，无 API break，无 hashState 影响）",
+        "Chunk.java：顶点 9→10 float（加 aWind）；vertexAO 4 级遮蔽 T=[1.0,0.80,0.62,0.42] 烘焙进顶点色；wind 顶点正弦偏移",
+        "Game.java：worldShader FS 加距离雾（密度 0.012，雾色=地平线）；initSkyShader 全屏渐变天空；initShadowShader 接触阴影软盘；drawFrame 重排（天空→世界→接触阴影→实体→HUD）；drawEntities 改 flat shader（规避 NaN 法线）；addShadow；time 渲染层累加器",
+        "全部渲染层改动不进 sim 指纹 → 四门禁零影响"
+      ],
+      "gate": "PASS (render 层编译通过；四门禁全绿) — DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628"
+    },
+    {
+      "id": "EVAL2-P0-BEASTS",
+      "title": "EVAL-2 P0 敌兵种类 + AI 差异（快速/远程/坦克/Boss）",
+      "owner": "game-designer / systems-designer",
+      "status": "DONE (前序 turn 已完成)",
+      "deliverables": [
+        "Beast.java: 4 原型静态表(GRUNT/STALKER/BRUTE/SPITTER) 差异化 SPEED/HP/DMG/CONTACT/ATKCD",
+        "BeastSystem: 按 simStream 派生类型生成 + 按类型移动/攻击(SPITTER 远程 Standoff 吐息)",
+        "Game: 按类型着色 + 锁定名牌显示类型名",
+        "四门禁全绿（DETERMINISM 不变；ZERO-DRIFT 因 sim 变更重算为 c9e1d983 但 ==refHash）"
+      ],
+      "gate": "PASS"
+    },
+    {
+      "id": "NPC-SOC-FOUND",
+      "title": "NPC 社会层地基（Java 重建 mind/social/body/npc/decision）",
+      "owner": "systems-designer / general-purpose",
+      "status": "DONE",
+      "deliverables": [
+        "src/core/agent/Body.java / Mind.java / Social.java / Npc.java / Decision.java（镜像 Python agents/，纯确定性 sim 类，2026-09-10 实测已存在且编译通过）",
+        "World.npcs 字段（实体豁免 hashState，类比 Beast/Shrine）+ spawnNpc()",
+        "随机只走 world.simStream(name)，不碰主 rng/网格",
+        "不改动 registerDefaultSystems 与 World.tick 主路径 → 四门禁保持全绿"
+      ],
+      "gate": "PASS（2026-09-10 全量重编 CORE/SOFT/LWJGL EXIT=0；四门禁指纹不变 DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628）"
+    },
+    {
+      "id": "NPC-SOC-WIRE",
+      "title": "批次0 · NPC 接入 World.tick 主循环（解锁后续全部 NEEDS-NPC 移植）",
+      "owner": "systems-designer",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-FOUND"
+      ],
+      "deliverables": [
+        "src/core/systems/NpcSystem.java（注册进 registerDefaultSystems 末位）：首 tick 确定性生成 5 人聚落 + 每 tick 驱动 body.advance/mind.update/social.decay/decision.choose + 执行意图(进食/饮水/漫步，纯内部态)",
+        "NPC 行动只走 simStream（deriveStream 不推进主 rng.state），绝不读主 rng/fxRng，不写 mat",
+        "四门禁指纹不变 DETERMINISM 21a2de200fda8a8b（gate1）；新增 NpcDeterminismTest 证 spawn 后同种子自洽(npcCount=5,内部态签名两遍一致)（gate2）"
+      ],
+      "gate": "PASS（2026-09-10 全量重编 CORE/SOFT/LWJGL EXIT=0；四门禁全绿指纹不变 DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628；NpcDeterminismTest hashA==hashB n=5 内部态一致）"
+    },
+    {
+      "id": "NPC-SOC-PORT-B1",
+      "title": "批次1 · 社会核心（家族/情绪/规范 + 对话 + NPC 渲染/交谈）",
+      "owner": "systems-designer + art/UI",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-WIRE"
+      ],
+      "deliverables": [
+        "src/core/agent/VillageSocial.java：家族注册表 + 村庄情绪 + 社会规范（实体级开放标量，不进 hashState）",
+        "src/core/systems/SocialSystem.java：邻里升温 + 情绪状态机 + 村庄情绪/规范 + 结亲生育（确定性，无 rng），注册进 registerDefaultSystems",
+        "src/core/agent/Dialogue.java：persona/tone/规则回话/话题感知/忆往（移植 dialogue.py 确定性路径）+ ASCII 性格/情绪标签",
+        "src/core/sim/SocialDeterminismTest.java：社会态同种子自洽门禁（第6道）",
+        "Game.java：村民渲染（职业着色人形 + 头顶情绪色标 + 接触阴影）+ T 键交谈（回话写 dialogue.log）",
+        "NpcSystem 漫步约束在村心半径内（使邻里日久生情可结亲）"
+      ],
+      "gate": "PASS（2026-09-10 全量重编 CORE/SOFT/LWJGL EXIT=0；四门禁指纹不变 DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628；NPC-DETERMINISM n=8 自洽；SOCIAL-DETERMINISM hashA==hashB families=4 births=11 mood=0.405 trust=0.424 coop=0.845 norm=true）"
+    },
+    {
+      "id": "NPC-SOC-PORT-B1-CLOSE",
+      "title": "批次1 余项 · storyteller + 村志消费端（对齐 P1「世界因你而变被看见」）",
+      "owner": "systems-designer + ui",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-PORT-B1"
+      ],
+      "deliverables": [
+        "src/core/world/Chronicle.java：村志档案库（事件→episode + bigram Jaccard 检索 + 村志叙述生成）；**不进 hashState**",
+        "src/core/systems/StorytellerSystem.java：注册进 registerDefaultSystems 末位；每 tick 归档转折事件(marry/birth/repel/awaken/norm/despair)、周期(24tick)出「当日村志」；不调 w.log 防回馈环",
+        "World.chronicle 字段（与 npcs/beasts/shrines/social 同纪律：只读 events/npcs/social，不写 mat/mass/prosperity/skills/villageMemory）",
+        "消费端：Game HUD 常驻 ASCII 村志摘要（CHRONICLE D.. REPEL/MARRY/BIRTH + LAST 条目）+ chronicle.log（中文全文 UTF-8）；Dialogue.talk 优先引用村志最新档案",
+        "src/core/sim/StorytellerDeterminismTest.java：村志同种子自洽门禁（第 7 道）"
+      ],
+      "gate": "PASS（2026-09-10 全量重编 CORE/SOFT/LWJGL EXIT=0；四门禁指纹不变 DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628；STORYTELLER-DETERMINISM hashA==hashB 732852463181b8fe，CHRONICLE D11 REPEL 35 MARRY 2 BIRTH 3 episodes=41）"
+    },
+    {
+      "id": "NPC-SOC-PORT-B2",
+      "title": "批次2 · 文明深度（culture/religion/tech/industry/urban/diplomacy/warfare）",
+      "owner": "systems-designer + ui",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-WIRE"
+      ],
+      "deliverables": [
+        "src/core/world/Civilization.java：文明状态容器（节日/绰号/禁忌/传说 + 神殿/信徒/虔诚/异象 + 研究/解锁/乘子/蓝图 + 矿石/生铁/齿轮/电力/电网 + 区划覆盖层/宜居/地价 + 势力/关系/协定/冲突 + 政权/军势/民怨）；不进 hashState",
+        "src/core/systems/CivilizationSystem.java：注册进 registerDefaultSystems 末位；固定子步序 urban(10)→tech(20)→industry(10)→religion(10)→diplomacy(20)→warfare(10)→culture(24)；全确定性无 rng 主状态（随机只走 simStream）",
+        "材料执行层（tech 自治修墙/重建、industry 网格磨蚀/铺缆）由 CivilizationSystem.MATERIAL_WORKS 开关守护默认关 → 网格一字不改，守指纹基线；开启属批次4 文明实体化",
+        "World.civ 字段（与 npcs/beasts/shrines/social/chronicle 同纪律：开放标量 + 覆盖层，不写 mat/mass/prosperity/skills/villageMemory）",
+        "消费端：Game HUD 常驻 ASCII 文明摘要（CIV RES/TECH/TEMPLE/ROADS/REL/REGIME）；Chronicle 扩展归档文明里程碑（tech/religion/diplomacy/warfare/culture）→ 文明进展进村志",
+        "src/core/sim/CivilizationDeterminismTest.java：文明同种子自洽门禁（第 8 道）"
+      ],
+      "gate": "PASS（2026-09-10 全量重编 CORE/SOFT/LWJGL EXIT=0；四门禁指纹不变 DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628；CIVILIZATION-DETERMINISM hashA==hashB 2597c5fb57ef35f9，research=175 unlocked=[farming2/medicine] temples=8 res37/ind48/farm55 roads24 rel nomad0.38/hill0.63/valley0.55 regimes2 revolt1 culture=2）"
+    },
+    {
+      "id": "NPC-SOC-PORT-B3",
+      "title": "批次3 · 个体成长（18 系统：learning/behavior/persona/genetics/evolution/medicine/robotics/firearms/fishing/taming/xeno/ascension/magic/cultivation/myth/dreamscape/chemistry/roleplay）",
+      "owner": "systems-designer + ui",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-WIRE"
+      ],
+      "deliverables": [
+        "src/core/world/Individual.java：个体层开放标量聚合容器（知识/行为/基因/进化/疫病/机器人/枪械/渔猎/驯养/异种/飞升/秘法/修行/神话/梦境/化学 + 个体层自持研究池）；不进 hashState",
+        "src/core/systems/IndividualSystem.java：注册进 registerDefaultSystems 末位；固定子步序 learning(10)→behavior(8)→persona(20)→genetics(20)→evolution(10)→medicine(5)→robotics(10)→firearms(10)→fishing(8)→taming(8)→xeno(10)→ascension(12)→magic(12)→cultivation(20)→myth(10)→dreamscape(8)→chemistry(12)→roleplay(20)",
+        "材料执行层（magic 真实施法写 temp、chemistry 反应层写 mat/mass/temp）由 IndividualSystem.MATERIAL_WORKS 开关守护默认关 → 网格一字不改，守指纹基线；开启属批次4",
+        "World.individual 字段（与 npcs/beasts/shrines/social/chronicle/civ 同纪律：开放标量，不写 mat/mass/prosperity/skills/villageMemory）",
+        "跨层修复①：个体层研究池 Individual.research 独立于 civ.research（信号源分离），避免个体层消费抽干文明科技池致 medicine 永久不解锁（实测修复前 civ.research 175→6.4，修复后复原 108.6）",
+        "跨层修复②：批次2 遗留工业链死尾 —— power() 加畜力/水力供电基线（外部替代 GENERATOR/WIRE 方块）、mine() 改为数字层产矿（不磨蚀网格）→ ore/iron>0、robots 复活",
+        "跨层修复③：xeno 外星人分支信号由永不触发的 civ.research≥200 改为 knowledge≥600（可触发）→ aliens 复活",
+        "消费端：Game HUD 常驻 ASCII 个体摘要（LIFE KNOW/MUT/EVO/SICK/HERO/DREAM）；Chronicle 扩展归档个体里程碑",
+        "src/core/sim/IndividualDeterminismTest.java：个体同种子自洽门禁（第 9 道）"
+      ],
+      "gate": "PASS（2026-09-10 全量重编 CORE/SOFT/LWJGL EXIT=0；四门禁指纹不变 DETERMINISM 21a2de200fda8a8b 逐字节一致 / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628；INDIVIDUAL-DETERMINISM hashA==hashB know=954 evoGen=121 mf=0.26 spec=2 robots=11 guns=8 recovered=24 spells=1 realm=6 heroes=4 lucid=44 aliens=3）"
+    },
+    {
+      "id": "NPC-SOC-PORT-B4",
+      "title": "批次4 · 深度打磨已覆盖系统（civilization/trade/disasters + farming/combat 已覆盖）",
+      "owner": "systems-designer + ui",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-WIRE"
+      ],
+      "deliverables": [
+        "src/core/world/Polity.java：民政经济容器（城镇等级/集市定价/犯罪/仲裁/累犯 + 货币/商队/通胀/供应链货流）；不进 hashState",
+        "src/core/systems/PolitySystem.java：注册进 registerDefaultSystems 末位；子步序 civ(5): town→price→crime→judge / trade(10): labor→mint→caravan→inflation→supply-chain",
+        "src/core/world/Calamity.java + src/core/systems/CalamitySystem.java：灾害触发层（干燥→点燃、连雨→洪涝、久旱→干旱、周期→地震 + NPC 撤离信号）；与既有 Wildfire/Flood/Drought/Earthquake 扩散系统分工（不重复造轮子）",
+        "材料执行层（点燃易燃格/抬高水位/房屋→木残骸）由 CalamitySystem.MATERIAL_WORKS 开关守护默认关 → 网格一字不改，守指纹基线",
+        "可达性修复①：撤离由“全局旗标见谁吓谁”改为局部危险感知（邻近 5×5 有火/淹才逃），修复久旱旗标致全村永久 scared 的世纪冻结（evac 877→60、NPC 恢复 calm/fond）",
+        "可达性修复②：商队 (int)rate（rate≈0.88）恒 0 改小数累积器 caravans 0→105",
+        "可达性修复③：仲裁增设累犯维度（初犯可获人情、惯犯失众望一律惩戒），使“惩戒”分支可达 judge pen=17/shield=19/recid=17",
+        "消费端：Game HUD 常驻 ASCII 民政摘要 POLITY(LV/POP/FAM/COIN/INFL/CARAVAN/CRIME/JUDGE) + 灾害摘要 CALAMITY(flag/DRY/RAIN/FIRE/FLOOD/DROUGHT/QUAKE/EVAC)；Chronicle 扩展归档 TOWN/CRIME/JUDGE/DISASTER/INFLATION",
+        "src/core/sim/PolityDeterminismTest.java：民政经济同种子自洽门禁（第 10 道）"
+      ],
+      "gate": "PASS（2026-09-10 全量重编 CORE/SOFT/LWJGL EXIT=0；四门禁指纹不变 DETERMINISM 21a2de200fda8a8b 逐字节一致 / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS PASS / STREAMING 87d5bf1cecb4c628；十道门禁全绿；POLITY-DETERMINISM hashA==hashB lv=3 alive=24 fams=7 crime=36(theft15/fight21) judge=36(pen17/shield19) coins=184.82 infl=1.44 caravans=105；CALAMITY fire=1 flood=3 drought=4 quake=1 alerts=23 evac=60）"
+    },
+    {
+      "id": "NPC-SOC-PORT",
+      "title": "按 PORTING_GAP.md 路线图批量移植原始概念系统（~52 NEEDS-NPC + ~13 打磨）",
+      "owner": "systems-designer",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-WIRE"
+      ],
+      "deliverables": [
+        "批次1 社会核心(family/emotion/norms/dialogue/storyteller/village_memory消费端) → 对齐 P1「世界因你而变被看见」 [已全部 DONE：见 NPC-SOC-PORT-B1 / NPC-SOC-PORT-B1-CLOSE]",
+        "批次2 文明深度(culture/religion/tech/industry/urban/diplomacy/warfare) [已全部 DONE：见 NPC-SOC-PORT-B2；材料执行层 MATERIAL_WORKS 默认关，归批次4]",
+        "批次3 个体成长(learning/behavior/persona/genetics/evolution/medicine/robotics/firearms/fishing/taming/xeno/ascension/magic/cultivation/myth/dreamscape/chemistry/roleplay) [已全部 DONE：见 NPC-SOC-PORT-B3；含跨层研究池/工业链/外星人三处修复；材料执行层 MATERIAL_WORKS 默认关，归批次4]",
+        "批次4 打磨已覆盖(civilization 城镇等级+定价+犯罪仲裁 / trade 定价 / disasters 触发/预警/撤离；farming 季节+灌溉 与 combat 技能树已由既有系统覆盖) [已全部 DONE：见 NPC-SOC-PORT-B4；三处可达性修复；材料执行层 MATERIAL_WORKS 默认关]",
+        "批次5 抽象字段(phases→昼夜/物相 / entropy→熵与有效能 / fusion→聚变辐射 / deepsea→深海基地) [已 DONE：见 B5-MATTER-FIELDS；link|portal 判定为『无世界状态的粘合/配置层』(link.py 鸭子类型 getattr 跨系统耦合 + portal.py CLI/Web 配置中枢)，显式排除不移植]",
+        "每批 K=3 并发 + 四门禁闸控（参照 docs/PORTING_GAP.md）"
+      ],
+      "gate": "PASS（批次1–5 全部 DONE；link/portal 已判定排除）"
+    },
+    {
+      "id": "C1-CJK-FONT",
+      "title": "C1 · CJK 位图字体：让中文村志/回话上屏（并修复 ASCII 字体从不渲染）",
+      "owner": "ui / technical",
+      "status": "DONE",
+      "depends_on": [],
+      "deliverables": [
+        "src/render/lwjgl/CjkFont.java（运行期位图字体：java.awt 光栅化→布尔点阵→同行连续亮像素合并→与 Font.draw 同格式 7 浮点顶点；零资产零纹理；缺失字体优雅降级 status()/available()）",
+        "Font.java 两处 bug 修复：① PX 1/14→1.4（原字形亚像素不可见）② 像素判定 '#'→'1'||'#'（原 ASCII HUD 从未发射任何顶点）",
+        "Game.java：T 键交谈→中文回话气泡（CJK wrap + 4 行截断）；B 键→村志中文浮层（说书人当日村志全文）；hudBuf 400000→1600000 浮点",
+        "render_diag.log 记 CJK font: <status>（启动即报字体可用性）"
+      ],
+      "gate": "PASS（2026-09-10；十道门禁全绿 DETERMINISM ad9e7b31 逐字节一致；无头验证 ASCII verts=1572(原0) / CJK verts=1980 / CJK OK font=Microsoft YaHei cell=16）"
+    },
+    {
+      "id": "C2-ZELDA-LOOP-2",
+      "title": "C2 · 塞尔达循环后半段：解谜点 + 可交互物 + 世界目标链 + 终局",
+      "owner": "game-designer / systems-designer",
+      "status": "DONE",
+      "depends_on": [
+        "ZELDA-ABILITY"
+      ],
+      "deliverables": [
+        "src/core/world/Trials.java（实体级开放状态容器：Site 试炼点/Cache 补给箱/世界之心 + objective() 目标链 + asciiSummary()/snapshot()；不进 hashState）",
+        "src/core/systems/TrialSystem.java（注册进 registerDefaultSystems 末位：首 tick 经 simStream(\"trial:place\") 确定性布点 3 试炼点(能力门) + 4 补给箱；世界之心置于全图最高峰；认取判定「邻近+具能力」/终点「显现+三力齐备+登顶」）",
+        "World.trials 字段；Simulation 注册 + import；Chronicle 归档 trial/relic 与 trial/heart 里程碑",
+        "src/render/lwjgl/Game.java：试炼点/补给箱/世界之心 世界空间渲染 + 接触阴影；HUD 新增 OBJ 目标链行 + TRIALS 进度行；横幅复用（并修复 shrine 横幅「设置但从不绘制」的旧死分支）",
+        "src/core/sim/TrialDeterminismTest.java（第 11 道门禁）：不变量（hashState 同种子逐字节一致）+ 可达性（脚本化巡礼断言 relics=3/caches=4/heartClaimed=true）"
+      ],
+      "gate": "PASS（2026-09-10；十一道门禁全绿 DETERMINISM 21a2de200fda8a8b 逐字节一致 / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628；TRIAL-DETERMINISM hashA==hashB e98fbd625997d1d3 sites=3 caches=4 REACH relics=3 caches=4 heartClaimed=true souls=290）"
+    },
+    {
+      "id": "C3-WEAPON-ARTS",
+      "title": "C3 · 多武器/多战技：武器 ↔ 战技形态解耦（突刺 / 回旋斩 AoE / 远射）",
+      "owner": "game-designer / systems-designer",
+      "status": "DONE",
+      "depends_on": [
+        "PROG-BUILD",
+        "ZELDA-ABILITY"
+      ],
+      "deliverables": [
+        "src/core/world/Weapons.java（新，武器/战技原型表：Art{LUNGE,CLEAVE,SHOT} + Def{name,atk,art,cost,range,mult,cd} + 5 档武器链 拳→铁剑→战斧→猎弓→符文刃 + artName/artNameCn/artDescCn）",
+        "src/core/world/Player.java：武器表抽到 Weapons（删 WEAPONS/WEAPON_ATK/ART_RANGE/ART_COST）；新增 arts(已解锁原型集合)/currentArt/cycleArt()(G 键轮换)/unlockArt()(拿到武器即永久解锁并切换)/weaponName()/artCdFor()；weaponArt() 改为按原型分派并返回 boolean（无目标不空放）；新增 beastsWithin()(AoE 快照，先收集后结算避免边遍历边移除)/hitBeast()(统一命中结算，tryAttack 与三战技共用)",
+        "三形态差异：LUNGE 冲 2.4 格+单体重击(mult2.0/射程3.6)；CLEAVE 原地横扫半径内全体+径向击退1.2格(mult1.7/射程3.2/耗体32)；SHOT 射程16格单体重击(mult1.9/耗体20)；实际 CD = max(DEX 派生 artCdMax, 武器自带 cd)",
+        "src/render/lwjgl/Game.java：G 键轮换战技 + 三套世界空间战技演出（LUNGE 蓝色斩痕 / CLEAVE 橙色扩散环 / SHOT 绿色弹道）+ 右上 `ART <形态>` 与 `G: SWITCH ART x<n>` + 新战技解锁横幅 + 复用 CJK 通道弹中文战技说明 + 失败提示（ART LOCKED / NO TARGET IN RANGE / BUSY）",
+        "src/core/sim/WeaponArtTest.java（第 12 道门禁）：补「玩家动作层」覆盖盲区 —— 原型差异（CLEAVE 一次命中 3 只且第 4 只范围外不受影响 + 击退成立；SHOT 命中 12 格外、18 格外不受影响；LUNGE 打远不打近邻）+ 边界（SHOT 无目标不施放/不耗体力/不进 CD；Lv<2 锁定）+ 解锁语义（幂等/轮换）+ 零漂移不变量（战技全程 hashState 逐字节不变）",
+        "全部为玩家实体层 + 渲染层；不写 mat/mass/prosperity/skills/villageMemory，不碰主 rng → 四道基线门禁指纹逐字节不变"
+      ],
+      "gate": "PASS（2026-09-10；十二道门禁全绿：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628 逐字节不变；WEAPON-ART LUNGE dmg=46 farUntouched=true | CLEAVE hit=3/3 outUntouched=true knock=true | SHOT dmg@12=57 outRankUntouched@18=true | NO_TARGET noCast=true noCost=true lockedLv1=true | UNLOCK baseOnly/first/idempotent/cycle/chain5 全 true | ZERO-DRIFT 42bb9b3211abdaf8==42bb9b3211abdaf8）"
+    },
+    {
+      "id": "C5-MENU-PAUSE",
+      "title": "C5 · 菜单/暂停/设置：纯逻辑状态机 + 丢 tick 暂停语义（ESC 菜单）",
+      "owner": "ui / systems-designer",
+      "status": "DONE",
+      "depends_on": [],
+      "deliverables": [
+        "src/core/sim/MenuModel.java（新，纯逻辑状态机：Page{CLOSED,MAIN,SETTINGS,CONTROLS,QUIT_CONFIRM} + Action{NONE,RESUME,QUIT,BACK}；导航环绕/页跳转回退落点/设置钳制/QUIT 二次确认默认 CANCEL；零 GL 零世界写入）",
+        "src/core/world/World.java：新增 paused 开关（不进 hashState）；tick() 首行 if(paused) return —— 暂停语义被定义为『丢 tick』：不推进 tick 计数、不耗 RNG、不改网格",
+        "src/render/lwjgl/Game.java：ESC 改为起菜单（不再直接退出）；菜单输入路由（W/S/↑↓ 导航、A/D/←→ 调值、ENTER 确认、ESC 逐层返回）+ 光标模式切换（菜单放开指针并重置视角基准，防瞬跳）+ 鼠标灵敏度走 menu.mouseSens()（默认 0.15 = 旧硬编码）+ 循环暂停丢帧不追帧 + 暂停中禁用挖放/清空待处理动作（防恢复瞬间补放）+ 设置即时应用（FOV/视距重算投影、HUD 显隐）+ 居中菜单浮层（压暗 + 选中高亮 + CJK 中文副标题）",
+        "src/render/lwjgl/Font.java：新增 Font.width(text,scale)（右对齐/框宽计算）",
+        "src/core/sim/MenuTest.java（第 13 道门禁）：状态机/层级/环绕 + QUIT 二次确认 + 设置钳制与 no-op + **暂停透明性**（中途暂停 p3/p7/p1 与从未暂停 300 tick 的 hashState 逐字节一致）+ 暂停中世界冻结/恢复后推进 + 菜单导航零漂移",
+        "全部为渲染层 + 纯模型；World 仅多一个不进指纹的布尔开关 → 四道基线门禁指纹逐字节不变"
+      ],
+      "gate": "PASS（2026-09-10；十三道门禁全绿：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628 逐字节不变；MENU STATE/NAV/QUIT/SETTINGS 全 true | PAUSE-TRANSPARENT 673a080d240eaa84==673a080d240eaa84/673a080d240eaa84/673a080d240eaa84 | FROZEN hashEq=true resumeAdvances=true menuNoDrift=true）"
+    },
+    {
+      "id": "D3-DAYNIGHT-VISUAL",
+      "title": "D3 · 昼夜/天气视觉：DayCycle 纯模型驱动天色/日照/环境光/雾 + 星空日月 + HUD 时钟（顺带修掉“天空贴屏幕”旧缺陷）",
+      "owner": "art-director / technical-director",
+      "status": "DONE (code) — 待本机 GL 目视验收",
+      "depends_on": [
+        "ART-PROG-2"
+      ],
+      "deliverables": [
+        "src/core/world/DayCycle.java（新，纯确定性派生模型：零状态/零 RNG/零网格写入）：DAY_LEN=512 tick（20tick/s → 25.6s 一昼夜）；phase/dayNumber/sunHeight/isNight/nightFactor/lightDir/ambient/lightTint/skyTop/skyHorizon/starAlpha/fogDensity/label/clock；5 关键帧调色板 + smoothstep 插值保证天色连续不跳变；内含 SkyBasis（相机基 + 半 FOV → 屏幕 NDC 反解世界视线方向的纯数学，headless 可断言）",
+        "src/render/lwjgl/Game.java：world shader 由写死 l=0.55+0.45d 改为 uAmbient + uLightTint（昼夜驱动）；sky shader 重写为**按视线方向取色**（原 vY=aP.y 屏幕 Y → 抬头低头天色不动，属旧缺陷），并加程序化星空（hash，不用 RNG 流）+ 太阳/月亮盘与光晕（同一光源方向，夜里自动换月亮）+ 降雨压暗偏冷；drawFrame 每帧从 view 矩阵提取相机基（与渲染严格一致）并上传 11 个新 uniform；雾色绑地平线色、雾密度随晨昏/夜/雨变化；HUD 顶部新增昼夜时钟（DAY n / HH:MM / 时段 / CLEAR|RAIN + 24h 游标）",
+        "src/core/systems/AuroraSystem.java：删私有相位 t%128>=64，改用 DayCycle.isNight(w.tick) —— “夜”全项目唯一定义（极光只在夜色里出现）；仅改事件时机，不写网格/不耗主 rng",
+        "src/core/sim/DayNightTest.java（第 14 道门禁）：周期/回绕/日序 + 连续性（逐 tick 扫 2 个整周期，色/光/雾变化量 ≤0.06，防“天色硬切”）+ 取值域与昼夜单调（正午 > 午夜、正午雾 < 晨昏雾）+ 射线基（屏幕中心==前向、fov90 时上边缘恰 45°、沿屏幕 Y 扫视线高度严格单调、单位长度）+ 纯函数零漂移（狂算整套昼夜量后 hashState 与 rng.state 逐字节不变）+ 防死分支（极光事件数 >0 且全部落在夜里）",
+        "全部为渲染层 + 纯模型 + 一处事件时机修正；不写 mat/mass/prosperity/skills/villageMemory → 四道基线门禁指纹逐字节不变"
+      ],
+      "gate": "PASS（2026-09-10；十四道门禁全绿：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628 逐字节不变；DAYNIGHT CYCLE period/negWrap/anchors 全 true | CONTINUOUS eps=0.06 top=0.0118 hor=0.0246 tint=0.0143 amb=0.0039 dir=0.0110 star=0.0269 | SUN noon=0.6200 mid=0.2000 dawn=0.4100 fogNoon=0.0090 fogDawn=0.0144 | NIGHT isNight(0)=true isNight(HALF)=false | RAY center=fwd/up45/monotone/unit 全 true tanX/tanY=1.7778/1.0000 | PURE hashEq=true rngEq=true h=673a080d240eaa84 | AURORA events=7 atNight=7 atDay=0）"
+    },
+    {
+      "id": "C4-AUDIO",
+      "title": "C4 · 程序化音频：Sfx 参数表 + 纯函数合成 + 声部池混音 + javax.sound 输出（零新增依赖）",
+      "owner": "technical-audio / systems-designer / ui",
+      "status": "DONE (code) — 待本机用耳朵验收",
+      "depends_on": [
+        "C5-MENU-PAUSE"
+      ],
+      "deliverables": [
+        "src/core/audio/Sfx.java（新，23 个音效原型表：波形{正弦/方波/锯齿/三角/噪声} + 扫频 f0→f1 + 时长/增益/起振/衰减指数/尾部释放/优先级/噪声比/第二分音；每项都是常量，零资产零 RNG）",
+        "src/core/audio/AudioSynth.java（新，纯函数合成器：SR=22050 单声道 16bit；sampleAt(sfx,variant,i) 只依赖三元组，闭式相位 φ=2π(f0t+(f1-f0)t²/2dur) 故可 O(1) 取任意样点；噪声=白噪+一阶高通(差分仍是纯函数)；音高微扰与噪声全走整数位混洗，不碰 SeededRNG）",
+        "src/core/audio/AudioMixer.java（新，纯逻辑混音器：MAX_VOICES=8 定长声部数组、优先级抢占（同级抢最旧=老化，防饿死）、年龄按播放序号而非混音帧数、int 累加后一次性钳制、静音/零音量→声部照常老化但输出全零、played/dropped 计数）",
+        "src/render/audio/AudioOut.java（新，javax.sound.sampled 极薄封装：开 22050Hz/16bit/单声道线 + 200ms 缓冲；喂前查 line.available() 缓冲满就少喂或跳过，绝不阻塞渲染；short[] 手动摊平成小端字节（SourceDataLine 无 short[] 重载）；无设备/被杀/异常一律降级静音且不冒泡）",
+        "src/render/lwjgl/Game.java：29 处音效触发（挖 DIG/放 PLACE/挥空 SWING/命中 HIT/击杀 KILL/受伤 HURT/起跳 JUMP/落地 LAND/翻滚 ROLL/炸弹 BOMB/三战技 ART_LUNGE·CLEAVE·SHOT/升级 LEVELUP/掉落·魂锻 LOOT/交谈 TALK/新战技与祭坛觉醒 UNLOCK/遗物 RELIC/世界之心 HEART/菜单 MOVE·SELECT·BACK/被拒 DENY）+ 敌兵总血量下降才出 HIT（挥空只有风声）+ 音频初始化写入 render_diag.log",
+        "src/core/sim/MenuModel.java：SETTINGS 页新增 VOLUME（0..100 步进 5）与 SFX（开关）两行（行数 5→7、可编辑行 4→6、BACK 行索引 4→6）+ volumeF() 换算；Game 仅在变更时下发给混音器（避免每帧清空声部池）",
+        "src/render/lwjgl/Game.java 顺手修复：轻攻击 F 键加 !menu.isOpen() 守卫 —— setIntent 写的是 Player 自身意图队列（不受 clearQueuedActions 保护），暂停中按 F 会在恢复瞬间“补砍一刀”，正是 C5 想消灭的补放",
+        "src/core/sim/AudioTest.java（第 15 道门禁）+ build_runner.py/build.bat/build.sh（core/audio + render/audio 源清单 + 第 15 道）"
+      ],
+      "gate": "PASS（2026-09-10；十五道门禁全绿：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628 逐字节不变；AUDIO PURE 23/23 pcmEq=true | DET burstEq=true bytes=8192 | ENVELOPE 23/23 bad=[] | VOICES cap=8 fill32 played=32 dropped=0 active=8 | STEAL hi>lo=true starveLo=true lruOldest=true | MUTE silent/blocked/zeroVol 全 true | MIX rails=true exact=true differ=0 | ZERO-DRIFT e9c4d55a16022fae==e9c4d55a16022fae==e9c4d55a16022fae）"
+    },
+    {
+      "id": "D2-CHRONICLE-DEDUP",
+      "title": "D2 · 村志记忆长程去重：骨架判等 + 计数/归档解耦（修“复读机式村志”）",
+      "owner": "systems-designer / ui",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-PORT-B1-CLOSE"
+      ],
+      "deliverables": [
+        "src/core/world/Chronicle.java：① 长程去重 —— 同一 action + 同一“骨架”（去掉「第N时辰：」前缀后的文本）只入库一条，骨架判等与发生时刻无关（Python 原版按含“第N天”的全文去重，实际只挡得住同一天内的重复）；② 计数/归档解耦 —— counts（每次发生都计，含被去重未入库者）与 episodes（去重后条数）分开，HUD「REPEL n」不再因去重而停涨；③ 新增 lastAscii/lastTick（LAST 反映“最新发生”而非“最新入库”）+ skeleton()/countsTotal()/distinctOf()",
+        "关键收益（实测 240 tick）：episodes 60 → 18（-70%），其中 35 条一模一样的“旅人击退了来犯之敌”收敛为 1 条；counts 各值一字不变（REPEL 35 / MARRY 2 / BIRTH 3 / occur 60）；村志「近几件值得记下的事」不再刷屏",
+        "src/core/systems/CivilizationSystem.java：节日阈值由“档案条数”改为“发生次数”（Chronicle.count）—— 节日纪念的是“发生了多少次”而非“留下多少条不同档案”，使 D2 去重不削弱节日/绰号可达性（实测 festivals 仍=[添丁节, 婚嫁节] 一字不变）",
+        "src/core/sim/StorytellerDeterminismTest.java（第 7 道门禁）加固：新增 DEDUP 三类断言 —— ① 真实跑中 REPEL 发生 35 次但档案只 1 条、且全档案无重复骨架；② 合成事件精确验证（40 条同义 repel → counts=40/档案=1；2 对不同夫妻 → 档案=2；2 个不同新生儿 → 档案=2；absorb 幂等）；③ 叙事层（村志计数用真实发生数“40 次击退”、雷同句恰好 1 条）"
+      ],
+      "gate": "PASS（2026-09-10；十五道门禁全绿：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628 逐字节不变；STORYTELLER-DETERMINISM hashA==hashB 732852463181b8fe；CHRONICLE-DEDUP live(occur=35 eps=1) noDup=true lastOk=true | synth(count=40 repel=1 marry=2 birth=2 total=5) storyCount=true storyRepeat=1 idem=true；改前后整份门禁报告仅 2 行不同，其余输出逐字节一致）"
+    },
+    {
+      "id": "B5-MATTER-FIELDS",
+      "title": "批次5 · 抽象字段：物相 / 熵与有效能 / 聚变辐射 / 深海基地（开放标量层；link|portal 显式排除）",
+      "owner": "systems-designer / ui",
+      "status": "DONE",
+      "depends_on": [
+        "NPC-SOC-PORT"
+      ],
+      "deliverables": [
+        "src/core/world/Matter.java（新建）：物相层(phase/transitions/alloy) + 熵层(supply/work/entropy/exergy) + 聚变层(reactors/fusionOut/radiation) + 深海层(subs/pressure/mineral/pollution/colonies)，共 15 个开放标量 + phaseName/asciiSummary/deepSummary/snapshot；World 只加一个 public final Matter matter 字段（与 npcs/beasts/shrines/social/chronicle/civ/individual/polity/calamity 同纪律：**不进 hashState**）",
+        "src/core/systems/MatterSystem.java（新建）：注册进 registerDefaultSystems 末位；固定子步序 phases→entropy→fusion→deepsea；INTERVAL=8 tick 一次；材料执行层（辐射扩散 / 作物变异 / NPC 辐射伤害 / 海洋遮罩 / 潜艇布点）由 MatterSystem.MATERIAL_WORKS=false 默认关守护 —— 关时网格一字不改，守指纹基线；**本系统完全不消费 rng（忽略入参）**，连 simStream 都不吃",
+        "信号源替换（Java 无 Python temp/radiation 网格）：温度由 FIRE/LAMP 方块数 + 昼夜气候合成（climate=1.5·sin(2πtick/512)）；熵由 civ.power + 日照供给，exergy=max(0, supply·ETA − entropy·0.05)；聚变由 civ.research/civ.power；深海由 WATER 方块数 + civ.research（用 水+科技 门而非 Python 的 科技+齿轮 门 —— 实测 civ.gear≡0，若照搬则该门在 Java 永不可达，属死代码）",
+        "src/core/sim/MatterDeterminismTest.java（第 18 道门禁）：① 不变量（同种子两遍 hashState 与 matter.snapshot 一致）；② 可达性（transitions≥1 且 phasesSeen≥2 且 12 个字段全非死 —— 防『系统在跑、字段恒 0』的死尾）；③ 指纹隔离证明（直接改 matter 字段后 hashState 逐字节不变 → 证明该层在指纹之外）；④ 零 RNG 证明（跑一次 update() 前后 rng.state() 不变 → 证明新增系统不借用主 RNG，不扰动其它层零漂移）",
+        "src/render/lwjgl/Game.java：HUD 新增两行 ASCII 摘要 —— MATTER(物相/跃迁/合金/有效能/熵) 与 DEEPSEA(潜艇/压力/矿物/污染/殖民地/聚变/辐射)；面板高度 128→176",
+        "link.py（鸭子类型 getattr/反射 跨系统粘合层）与 portal.py（CLI/Web 配置中枢）判定为『无世界状态产物』，显式排除移植（已记录，非遗漏）"
+      ],
+      "gate": "PASS（2026-09-11；十八道门禁全绿：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628 逐字节不变；MATTER-DETERMINISM hashA==hashB 2597c5fb57ef35f9；MATTER-GATE det=true layer=true trans=21 phasesSeen=2 live=true isolated=true noRng=true；MATTER A phase=LIQ alloy=0.664 supply=3.267 work=0.439 entropy=23.392 exergy=0.856 reactors=2 fusionOut=4.000 rad=3.722 subs=1 pressure=2.740 mineral=62.400 pollution=2.057 colonies=18.221）"
+    },
+    {
+      "id": "ART-PROG-3",
+      "title": "美术三期 · 调色与光照打磨（半球环境光 / 每体素颗粒 / 花田色盘 / 调色+暗角）",
+      "owner": "art-director",
+      "status": "DONE (code) — 待本机 GL 目视验收",
+      "depends_on": [
+        "ART-PROG-2"
+      ],
+      "deliverables": [
+        "src/render/lwjgl/Game.java：worldShader 由单光改为 key+半球双光（hemi=0.5+0.5*n.y；l=uAmbient+(1-uAmbient)*(0.72*key+0.28*hemi)）+ 每体素材质颗粒（col*=0.94+0.12*h31(floor(vWorld))）+ 调色（饱和/对比各 +6%）+ gl_FragCoord 径向暗角（四角 -20%）；skyShader 同套调色+暗角；新增 uRes uniform；雨压暗 0.25→0.15",
+        "src/render/lwjgl/Chunk.java：新增 hash01（世界坐标纯哈希，零 RNG）/ vegTint（FLOWER 按体素从五色盘取色：玫瑰/金盏/白/紫/珊瑚；LEAF ±12% 明度抖动）；putV 增 (bx,by,bz) 体素参数（与 Game.putV 对称）",
+        "src/core/world/Blocks.java：FLOWER 基色 230,90,160 → 222,120,140（洋红→温和玫瑰；实际由 vegTint 色盘覆盖）",
+        "src/core/world/DayCycle.java：ambient 夜 0.20→0.26（线性项 0.42→0.36，正午仍 0.62；满足 DayNightTest 的 [0.199,0.621] 与 noon-mid>0.3 约束）；夜色地平线色 0.030,0.040,0.100 → 0.045,0.055,0.115",
+        "docs/ART_BIBLE.md：§3 光照合成更新为双光公式 + 每体素颗粒；新增 §8「ART-PROG-3 三期打磨」（手段/落点/参数表 + 纪律）"
+      ],
+      "gate": "PASS（2026-09-11；十八道门禁全绿且四道基线指纹逐字节不变：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628；MATTER 2597c5fb57ef35f9 不变；build_report 20 处 _EXIT=0、0 编译错误）—— 纯渲染层改动，仿真零漂移"
+    },
+    {
+      "id": "C6-MEGALITH-P1",
+      "title": "巨构 Phase 1 · 远景巨构剪影（render-only 零漂移）",
+      "owner": "art-director（technical-artist 执行）",
+      "status": "DONE (code) — 待本机 GL 目视验收",
+      "depends_on": [
+        "ART-PROG-3"
+      ],
+      "deliverables": [
+        "src/render/lwjgl/Silhouettes.java（新建）：全局坐标确定性 monumentAt（间距 384 / 存在率 0.62 / TOWER+GATE 两变体 / 4 向旋转 / 坡度否决 SLOPE_MAX=12；原点格必出 TOWER H176@(170,170)，离出生点 240 格）；地形锚定逐字节复刻 World.terrainHeightField/valueNoise/cellHash 公式（世界公式变更须同步）；色板 ASHLAR(212,206,192)/SHADE(146,140,128)/VEIN(188,182,170)/GOLD(232,190,96) 渲染层自有（不动 Blocks.java）；GOLD 顶点色烘焙 ×1.8（夜辉）；断拱 + 断柱 + 半埋碎块（巨物主义五语法）",
+        "src/render/lwjgl/Game.java：7 处接入（silhouettes 字段 / uFogScale 声明 + FS uniform 声明 + 雾公式乘 uFogScale + location 获取 / 每帧 chunk 前 1.0 / 剪影 pass FOG_RELIEF=0.35 后还原）；复用 worldShader → 自动获得昼夜光色/雾/暗角；顶点格式与 Chunk 一致（10 float stride=40，wind=0）",
+        "纯逻辑自测（临时文件已删）：det=true（双种子 987654321/42）；survey ±6 格 91 座、nearest=240@(170,170)；单座 1692 顶点"
+      ],
+      "gate": "PASS（2026-09-11；十八道门禁全绿且四道基线指纹逐字节不变：DETERMINISM 21a2de200fda8a8b / ZERO-DRIFT 8a69c3559c2d86bf / PHYSICS / STREAMING 87d5bf1cecb4c628；MATTER 2597c5fb57ef35f9 不变；20 处 _EXIT=0、0 编译错误）—— render-only：不写 mat、不消费任何 RNG（随机性全来自全局坐标整数哈希）"
+    },
+    {
+      "id": "C6-MEGALITH-P2",
+      "title": "巨构 Phase 2 · 近场可进入神殿（材化进 mat，零基线漂移）",
+      "owner": "art-director（technical-artist 执行）",
+      "status": "DONE (code) — 待本机 GL 目视验收",
+      "depends_on": [
+        "C6-MEGALITH-P1"
+      ],
+      "deliverables": [
+        "src/core/world/Megalith.java（新建）：全局坐标确定性放置（与 Silhouettes 共用 descAt：间距 384/存在率 0.62/坡度否决/出生锚点候选序扫描，锚点 ≤260 格）；选址带 waterLevel+2 ≤ gy ≤ sy-58（推导保证 TOWER 总高 48 塞进天花板，MIN_SY=96 带非空）；fillChunk 在 generateChunk 尾部按列材化 TOWER（基座/环墙+11×15 门洞/中庭空腔/祭坛长明灯/顶盖金冠/中央塔楼）与 GATE（双柱/相向悬臂缺口永存/半埋断龙骨）",
+        "src/core/world/Blocks.java：追加 ASHLAR/ASHLAR_SHADE/ASHLAR_VEIN/GOLD（索引追加，既有索引不变）；World.java：terrainHeightField/valueNoise/cellHash/smooth 放宽为包内可见（单一代码源，行为不变）+ generateChunk 尾部 MIN_SY 门控挂钩",
+        "src/render/lwjgl/Silhouettes.java：放置/锚定全部委托 Megalith（删除渲染层副本，消除双维护）；真身材化世界近于 SKIP_R=128 剪影停画；Game.java：世界 SY 48→112",
+        "src/core/sim/MegalithDeterminismTest.java（第 18 道门禁）：det（含材化+平移后自洽）+ anchor（≤260 格）+ materialized（条石家族 29417 块）+ struct（TOWER 长明灯/中庭/门洞；GATE 通道/断龙骨/柱体，按变体分流）+ slide（两窗口位置逐块一致）+ exempt（SY=40 门禁世界零神殿）"
+      ],
+      "gate": "PASS（2026-09-11；十八道门禁全绿：MEGALITH det=true anchor=true materialized=true struct=true slide=true exempt=true；四道基线指纹逐字节不变 21a2de200fda8a8b / 8a69c3559c2d86bf / 87d5bf1cecb4c628 + MATTER 2597c5fb57ef35f9；21 处 _EXIT=0、0 编译错误）—— **零基线漂移**（原预期「有意重基线」，MIN_SY 门控使其未发生）"
+    },
+    {
+      "id": "C6-MEGALITH-P3",
+      "title": "巨构 Phase 3 · 风化层与倒伏柱段（被吞噬增强）",
+      "owner": "art-director（technical-artist 执行）",
+      "status": "DONE (code) — 待本机 GL 目视验收",
+      "depends_on": [
+        "C6-MEGALITH-P2"
+      ],
+      "deliverables": [
+        "src/core/world/Megalith.java：weather() 风化层（gy-8..gy+8 带内 ASHLAR 家族按埋深 5%→25% 侵蚀为 MOSS；不碰 GOLD/LAMP/AIR；全局坐标哈希确定性）+ writeTower 倒伏柱段 ×2（正交半埋躺柱，哈希缺口 → 断口参差）",
+        "src/core/sim/MegalithDeterminismTest.java：断龙骨探针兼容苔藓侵蚀（VEIN 或 MOSS）"
+      ],
+      "gate": "PASS（2026-09-11；十八道门禁全绿、四道基线指纹逐字节不变；条石家族 29417→27519 ≈1900 块被苔藓侵蚀证明风化层生效；MEGALITH 六证仍全 true）"
+    },
+    {
+      "id": "F-SAVE",
+      "title": "落盘存档（F9/F10 + 启动自动读档 + 门禁 18 黄金测试）",
+      "owner": "art-director",
+      "status": "DONE (code) — 待本机验收（F9/F10）",
+      "depends_on": [],
+      "deliverables": [
+        "World.save/load 扩展段 v2：player 完整状态（hp/souls/level/str/weapon/abilities）+ civ/polity/social/matter/trials/calamity/individual 系统状态标量",
+        "setBlock 标 editedChunks（系统编辑持久化——顺手修「工匠建筑滑窗消失」bug）",
+        "Game：F9 快存 / F10 运行中读档（整体替换 sim + 全块重建）/ 启动自动读档 save/world.sav；提示行更新",
+        "SaveLoadTest 增强（0-tick hash 相等 + 300-tick 演化后仍一致）并接线为门禁 18"
+      ],
+      "gate": "PASS（2026-09-11；SAVEL-GATE hash0=true hash300=true；18 道门禁全绿 22 处 _EXIT=0；四道基线指纹逐字节不变）"
+    },
+    {
+      "id": "M3-STREAM-SCALE",
+      "title": "M3 · 大世界规模流畅：跨图流式分帧（治本+分帧）+ 实体查询去 O(N^2)",
+      "status": "DONE",
+      "owner": "agent",
+      "layer": "engine",
+      "gate": "StreamChunkTest（第17道：分帧等价 + INDEX 分片等价 + 索引惰性等价 + 邻域等价）",
+      "notes": "① 索引表示 TreeSet<int[]> → 升序平铺 int[]（CellSet，去 301ms 比较器税）；setBlock 增量补丁缓冲 indexDelta + ensureIndex；rebuildIndex 三趟扫描合一（索引+surfaceCells+waterSurface+surfaceY）；stepShift 新增 INDEX 阶段（phase4）分帧推进索引重建。② SocialSystem.adjacencyAndMood 双重循环 → 均匀网格 3×3 邻域（判据/顺序不变）。实测：单帧最坏 508ms → 11.5ms（44x）；COMMIT 帧 677ms → 2.67ms；smoothness gain 1.3x → 11.8x；每帧均 3.2ms。契约：isShifting() 期间渲染层须暂停 tick（Game.loop 已接线）。四基线指纹逐字节不变。",
+      "artifacts": [
+        "core/world/World.java",
+        "core/systems/SocialSystem.java",
+        "render/lwjgl/Game.java",
+        "core/sim/StreamChunkTest.java",
+        "core/sim/M3Bench.java"
+      ]
+    },
+    {
+      "id": "N2-SNAPSHOT-ROLLBACK",
+      "title": "N2 · 快照/回滚三件套：紧致稀疏快照（N2-1）+ 原地恢复（N2-2）+ 回滚黄金判据（N2-3）",
+      "status": "DONE",
+      "owner": "agent",
+      "layer": "netplay",
+      "gate": "NetSnapTest（第40道：字节预算/压缩比/稀疏性/结构等价/双一致/防假绿）；RollbackTest（第41道：原地恢复精确/恢复前已跑偏/回滚==直跑/拒绝不匹配/惰性）",
+      "notes": "量化先行：实测与基线不同格数仅 28,699/2,867,200 = 1.0009%，100/100 块均有差异（18~406 格，无整块大改离群）→ 稀疏差分是最优解。格式 BWORLD2：每块 key + count + idx(int) + mat(byte) + mass(float) = 9B/格。实测 22,250,720 B → 317,330 B（70x）；构成大致对半：窗口稀疏差分 156KB + v5 反射段 155KB。基线契约：baseline(generateWindowTerrain 全窗同源) + diff == 存档状态；⚠️ 不能就地为单块重生成基线（Megalith 选址读邻列 mat → 异窗基线不可复现）。N2-2 restoreInPlace 不 new World/不重注册系统，强制重建基线后叠差分，seed/尺寸不符响亮抛错。N2-3 黄金判据通过：h@snapshot=d860636cd93f2f96 → h@diverged=e3db35fba4090c41 → h@restored=d860636cd93f2f96 → h@rollback == h@direct = d385c4c267719ea1。三个隐性坑：派生字段膨胀（→DERIVED_FIELDS_NOT_PERSISTED 断言）、SKIP 全局重名（→类限定名）、无幽灵条目（→NO_PHANTOM_SKIP）。余：窗口外编辑块仍整块落盘（Megalith 邻列依赖，有界尾项）；每 tick 取快照因基线重生成 204ms 仍不可行（N3 前置）。四基线指纹逐字节未变。",
+      "artifacts": [
+        "core/net/ChunkDiff.java",
+        "core/net/StateCodec.java",
+        "core/world/World.java",
+        "core/sim/NetSnapTest.java",
+        "core/sim/RollbackTest.java",
+        "core/sim/SnapshotStateTest.java",
+        "docs/NETPLAY_READINESS.md"
+      ]
+    },
+    {
+      "id": "N3-LOCKSTEP-CORE",
+      "title": "N3 · 锁步协议层：netHash 宽哈希（desync 检测）+ Transport/LockstepSession（回环可测）+ 真实 UDP 锁步（N3-2）",
+      "status": "DONE",
+      "owner": "agent",
+      "layer": "netplay",
+      "gate": "NetDesyncTest（第42道，7 项）；LockstepTest（第43道，5 项）；UdpLockTest（第44道，4 项：两端/三端收敛 + 晚加入被拒 + 跨 JVM 子进程 hash 逐字节一致 d978824b368f0c71）",
+      "notes": "netHash = hashState() + FNV(StateCodec.encode(world)) + FNV(各系统 encode) —— 与快照同源，编码覆盖什么就检测什么，新增字段自动纳入，不存在第二份名单；实测单次 21ms（预算 300），每 20~40 tick 校验一次即可。锁步会话：缺帧不推进（宁可卡住不可走偏）、输入延迟 D 只是调度旋钮（D=0 与 D=3 同终态）、对已模拟 tick 补录输入响亮拒绝、篡改一条输入帧的一个字节（dx i8，偏移 10）→ 两端在 checkpoint 都检出 desync。两个测试都抓过自己的错误：① 故障注入必须包在真实对端上（第一版包了孤儿线路，测成了缺帧）；② 浮点 x+1f-1f 不保证回到原值（0.7f→0.70000005f），做往返断言必须用整数字段——netHash 连 1 ulp 都抓得到。N3-2 接真 UDP：UdpTransport（DatagramChannel 非阻塞 recv + join 并行/人齐才 connect/超时响亮抛）+ UdpRelay（星形中继，人齐才发 WELCOME，重复 HELLO 幂等，晚加入 rejects++）+ LockstepRunner（无头驱动器，FINAL 双写文件）+ NetMain（--host/--dedicated/--join 三形态同码）。跨 JVM 子进程 hash 逐字节一致：d978824b368f0c71。四基线指纹逐字节未变。",
+      "artifacts": [
+        "core/net/Transport.java",
+        "core/net/LoopbackTransport.java",
+        "core/net/LockstepSession.java",
+        "core/net/UdpTransport.java",
+        "core/net/UdpRelay.java",
+        "core/net/LockstepRunner.java",
+        "core/net/NetMain.java",
+        "core/world/World.java",
+        "core/sim/NetDesyncTest.java",
+        "core/sim/LockstepTest.java",
+        "core/sim/UdpLockTest.java",
+        "docs/NETPLAY_READINESS.md"
+      ]
+    },
+    {
+      "id": "N4-PREDICTIVE-ROLLBACK",
+      "title": "N4 · 预测回滚（GGPO 式客户端预测 + 权威帧到达回滚重演）",
+      "status": "DONE",
+      "owner": "agent",
+      "layer": "netplay",
+      "gate": "PredRollbackTest（第45道：终态==纯锁步 / 预测真错→真回滚 / 纯锁步无回滚也收敛 / 确定性重演 / 基线已缓存）",
+      "notes": "在 N3 纯锁步之上叠加客户端预测：本地意图即时跑在前面（零手感延迟），远端意图延迟到达时用「重复上次确认远端意图」预测，权威帧与记录帧不符则 restoreInPlace 原地回滚 + 重演；终态与纯锁步（D=0）逐字节一致。不碰 World.player 复数化——PredictiveSession 经既有 InputSink 按 playerIds 升序对位注入多玩家意图；World 仅新增可重算缓存（baseMat/baseMass + 失效标志），非仿真状态，已进 StateCodec.SKIP。World.ensureBaseline 懒生成 + 引用复用消除每 tick 204ms 全窗重生成（baselineRegenCount ≤3 实测）。三坑：① TreeMap.tailMap(k) 返回 SortedMap，改两参 tailMap(k,true) 得 NavigableMap；② 缓存基线被 StateCodec 当状态序列化 → 每快照膨胀 +23 MB 致 NETSNAP 1MB 预算失败 → SKIP 补 6 项 + SnapshotStateTest.SKIP_DOC 同步（RECORDED_SKIPPED 19→25）；③ 预测回滚收敛 guard 偏紧（非周期远端意图每 tick 回滚，最坏 ≈N·(D+1)），提到 (N+5)*(D+5)。四基线指纹逐字节未变。",
+      "artifacts": [
+        "core/net/RollbackEngine.java",
+        "core/net/PredictiveSession.java",
+        "core/world/World.java",
+        "core/net/StateCodec.java",
+        "core/sim/PredRollbackTest.java",
+        "core/sim/SnapshotStateTest.java",
+        "docs/NETPLAY_READINESS.md",
+        "docs/OPEN_ITEMS.md"
+      ]
+    },
+    {
+      "id": "N5-RENDER-LOOP",
+      "title": "N5 · 联机会话接入渲染主循环（--host/--join 接进 Game）",
+      "status": "DONE",
+      "owner": "agent",
+      "layer": "netplay",
+      "gate": "NetIntegTest（第46道：CROSS_INSTANCE 跨实例收敛 / WRAPPER_FAITHFUL 会话终态==直接 world.tick 演化 / TICKBODY_INJECTED 注入被使用）",
+      "notes": "抽象 core/net/TickBody 整 tick 推进体（含 rules/techs/effects 内容层，与单机演化逐字节等价）；LockstepSession/PredictiveSession 新增带 TickBody 构造（默认 world::tick 向后兼容 NetMain 无头路径），advance() 内用 tickBody.tick；LockstepRunner.open 重载注入 TickBody；Game 解析 --host/--join/--port/--seed/--players/--input-delay，联机态由会话驱动完整整 tick、本地移动按 tick 喂 Intent.move（physicsTick 固定步长、零帧 dt），单机分支逐字不变；finally 关 relay。本地移动确定性化：Player 意图是 Deque（setIntent 入队/World.tick 消费 pollIntent），无公开 intent 字段，故网络态用自定义 InputSink 把 arr[0] 暂存 applied[0] 再位移。四基线指纹逐字节未变。",
+      "artifacts": [
+        "core/net/TickBody.java",
+        "core/net/LockstepSession.java",
+        "core/net/PredictiveSession.java",
+        "core/net/LockstepRunner.java",
+        "core/sim/NetIntegTest.java",
+        "render/lwjgl/Game.java",
+        "docs/NETPLAY_READINESS.md",
+        "docs/OPEN_ITEMS.md"
+      ]
+    }
+  ]
+}

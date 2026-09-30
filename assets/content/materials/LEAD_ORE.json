@@ -1,0 +1,11 @@
+{
+  "name": "Lead Ore",
+  "cellType": "solid",
+  "hardness": 1.0,
+  "density": 40,
+  "digParticle": "dust",
+  "tags": [
+    "stone",
+    "ore"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Podzol",
+  "cellType": "solid",
+  "hardness": 0.4,
+  "density": 14,
+  "digParticle": "dust",
+  "tags": [
+    "soil"
+  ]
+}

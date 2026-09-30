@@ -1,0 +1,22 @@
+{
+  "name": "贤者",
+  "skin": "#FFDBAC",
+  "hair": "#D9C39A",
+  "hairStyle": 2,
+  "build": 0,
+  "accent": "#9B59B6",
+  "eye": "#3A6EA5",
+  "faceShape": 3,
+  "eyeShape": 1,
+  "browStyle": 1,
+  "noseStyle": 1,
+  "mouthStyle": 2,
+  "age": 2,
+  "height": 0,
+  "tattoo": 3,
+  "beard": 3,
+  "armor": 0,
+  "helmet": 0,
+  "cloak": 2,
+  "bio": "通晓古今的游历学者，额间铭刻着往昔。"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Ember Harvest (MOD 改版)",
+  "anim": "attack",
+  "cost": 8,
+  "cooldown": 2.0,
+  "tier": 2,
+  "requires": [
+    "flame_burst"
+  ],
+  "costSouls": 10,
+  "targeting": {
+    "shape": "point",
+    "radius": 1.5,
+    "maxTargets": 1
+  },
+  "effects": [
+    {
+      "type": "SPAWN_PARTICLE",
+      "id": "ember"
+    },
+    {
+      "type": "GRANT_ITEM",
+      "id": "ember_shard",
+      "amount": 3,
+      "delay": 0.2
+    }
+  ]
+}

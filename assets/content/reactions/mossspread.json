@@ -1,0 +1,8 @@
+{
+  "name": "MossSpread",
+  "in1": "MOSS",
+  "in2": "STONE",
+  "out1": "MOSS",
+  "out2": "MOSS",
+  "probability": 0.1
+}

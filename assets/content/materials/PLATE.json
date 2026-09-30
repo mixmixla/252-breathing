@@ -1,0 +1,10 @@
+{
+  "name": "Pressure Plate",
+  "cellType": "solid",
+  "hardness": 0.45,
+  "density": 19,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

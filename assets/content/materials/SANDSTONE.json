@@ -1,0 +1,10 @@
+{
+  "name": "Sandstone",
+  "cellType": "solid",
+  "hardness": 0.4,
+  "density": 24,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

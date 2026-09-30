@@ -1,0 +1,33 @@
+{
+  "name": "Swarm Pressure",
+  "module": "emergence",
+  "event": "appear",
+  "from": "swarm",
+  "if": [
+    {
+      "check": "SCALAR_AT_LEAST",
+      "name": "prosperity",
+      "value": 30
+    },
+    {
+      "check": "CHANCE",
+      "value": 0.5
+    }
+  ],
+  "then": [
+    {
+      "type": "SUMMON",
+      "id": "ash_wolf",
+      "amount": 2
+    },
+    {
+      "type": "SCREEN_SHAKE",
+      "power": 0.4
+    },
+    {
+      "type": "DIALOGUE",
+      "id": "Swarm incoming"
+    }
+  ],
+  "cooldown": 5.0
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Slate",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 27,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

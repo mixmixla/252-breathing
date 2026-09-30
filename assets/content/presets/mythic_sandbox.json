@@ -1,0 +1,19 @@
+{
+  "name": "Mythic Sandbox",
+  "description": "全模块沙盒：修仙、异种、机器人、魔法同场。",
+  "modules": [
+    "survival",
+    "emergence",
+    "capture",
+    "automation",
+    "mythic"
+  ],
+  "rules": [
+    "*"
+  ],
+  "params": {
+    "ascensionThreshold": 60,
+    "beastCap": 40,
+    "orbItemCost": 2
+  }
+}

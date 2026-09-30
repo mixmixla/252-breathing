@@ -1,0 +1,23 @@
+{
+  "name": "Learn By Doing (Sword)",
+  "module": "survival",
+  "event": "repel",
+  "from": "combat",
+  "if": [
+    {
+      "check": "CHANCE",
+      "value": 0.34
+    }
+  ],
+  "then": [
+    {
+      "type": "DIALOGUE",
+      "id": "Blade instinct grows"
+    },
+    {
+      "type": "GRANT_SKILL",
+      "id": "combat_instinct"
+    }
+  ],
+  "cooldown": 8.0
+}

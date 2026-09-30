@@ -1,0 +1,10 @@
+{
+  "name": "Wheat Filling",
+  "cellType": "plant",
+  "hardness": 0.12,
+  "density": 2,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

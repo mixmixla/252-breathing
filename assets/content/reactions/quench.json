@@ -1,0 +1,7 @@
+{
+  "name": "Quench",
+  "in1": "[fire]",
+  "in2": "[liquid]",
+  "out1": "AIR",
+  "probability": 0.90
+}

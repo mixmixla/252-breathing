@@ -1,0 +1,10 @@
+{
+  "name": "Emerald Block",
+  "cellType": "solid",
+  "hardness": 1.7,
+  "density": 40,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

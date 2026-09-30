@@ -1,0 +1,10 @@
+{
+  "name": "Cobblestone",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 26,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Harvest Logistics",
+  "module": "automation",
+  "event": "harvest",
+  "from": "farm",
+  "if": [
+    {
+      "check": "SCALAR_AT_LEAST",
+      "name": "prosperity",
+      "value": 10
+    }
+  ],
+  "then": [
+    {
+      "type": "SPAWN_PARTICLE",
+      "id": "leaf"
+    },
+    {
+      "type": "GRANT_ITEM",
+      "id": "ember_shard",
+      "amount": 2
+    }
+  ],
+  "cooldown": 0.2
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Bedrock",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 100,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

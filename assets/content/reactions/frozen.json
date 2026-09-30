@@ -1,0 +1,8 @@
+{
+  "name": "Freeze",
+  "in1": "WATER",
+  "in2": "[ice]",
+  "out1": "ICE",
+  "out2": "ICE",
+  "probability": 0.3
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Flower",
+  "cellType": "plant",
+  "hardness": 0.02,
+  "density": 2,
+  "digParticle": "leaf",
+  "tags": [
+    "plant",
+    "dry"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Peaceful Valley",
+  "description": "关掉地质域（火山/地震/矿脉）—— 演示系统级玩法组合：换一个 JSON 就换掉一整套系统。",
+  "modules": [
+    "survival",
+    "emergence"
+  ],
+  "rules": [
+    "*"
+  ],
+  "disablePhases": [
+    "GEOLOGY"
+  ],
+  "params": {
+    "beastCap": 12,
+    "erosionRate": 0.6,
+    "hungerRate": 0
+  }
+}

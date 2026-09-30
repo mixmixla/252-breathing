@@ -1,0 +1,10 @@
+{
+  "name": "Coral",
+  "cellType": "plant",
+  "hardness": 0.3,
+  "density": 6,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

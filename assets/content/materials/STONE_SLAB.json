@@ -1,0 +1,11 @@
+{
+  "name": "Stone Slab",
+  "cellType": "solid",
+  "hardness": 0.55,
+  "density": 26,
+  "digParticle": "dust",
+  "lightDecay": 0.80,
+  "tags": [
+    "stone"
+  ]
+}

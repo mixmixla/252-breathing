@@ -1,0 +1,11 @@
+{
+  "name": "Wood Slab",
+  "cellType": "solid",
+  "hardness": 0.45,
+  "density": 12,
+  "digParticle": "dust",
+  "lightDecay": 0.80,
+  "tags": [
+    "wood"
+  ]
+}

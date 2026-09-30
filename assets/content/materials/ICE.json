@@ -1,0 +1,10 @@
+{
+  "name": "Ice",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 9,
+  "digParticle": "mote",
+  "tags": [
+    "ice"
+  ]
+}

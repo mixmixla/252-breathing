@@ -1,0 +1,10 @@
+{
+  "name": "Hay",
+  "cellType": "solid",
+  "hardness": 0.05,
+  "density": 7,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

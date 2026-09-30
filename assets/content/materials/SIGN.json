@@ -1,0 +1,10 @@
+{
+  "name": "Sign",
+  "cellType": "solid",
+  "hardness": 0.5,
+  "density": 10,
+  "digParticle": "dust",
+  "tags": [
+    "wood"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Sugarcane Stalk",
+  "cellType": "plant",
+  "hardness": 0.1,
+  "density": 2,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Grass Block",
+  "cellType": "solid",
+  "hardness": 0.05,
+  "density": 12,
+  "digParticle": "leaf",
+  "tags": [
+    "plant",
+    "dry",
+    "soil"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Tin Ore",
+  "cellType": "solid",
+  "hardness": 0.8,
+  "density": 28,
+  "digParticle": "dust",
+  "tags": [
+    "stone",
+    "ore"
+  ]
+}

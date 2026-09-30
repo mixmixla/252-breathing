@@ -1,0 +1,22 @@
+{
+  "name": "游侠",
+  "skin": "#8D5524",
+  "hair": "#0B0B0B",
+  "hairStyle": 4,
+  "build": 1,
+  "accent": "#93C47D",
+  "eye": "#6B8E23",
+  "faceShape": 2,
+  "eyeShape": 0,
+  "browStyle": 0,
+  "noseStyle": 0,
+  "mouthStyle": 0,
+  "age": 1,
+  "height": 1,
+  "tattoo": 2,
+  "beard": 1,
+  "armor": 1,
+  "helmet": 1,
+  "cloak": 1,
+  "bio": "林间独行的猎手，右臂刺着部族图腾。"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Button",
+  "cellType": "solid",
+  "hardness": 0.5,
+  "density": 20,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

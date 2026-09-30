@@ -1,0 +1,10 @@
+{
+  "name": "Chain",
+  "cellType": "solid",
+  "hardness": 0.9,
+  "density": 38,
+  "digParticle": "dust",
+  "tags": [
+    "metal"
+  ]
+}

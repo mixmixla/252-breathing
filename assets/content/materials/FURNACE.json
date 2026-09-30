@@ -1,0 +1,10 @@
+{
+  "name": "Furnace",
+  "cellType": "solid",
+  "hardness": 1.20,
+  "density": 26,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

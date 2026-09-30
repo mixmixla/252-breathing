@@ -1,0 +1,11 @@
+{
+  "name": "Rail",
+  "cellType": "solid",
+  "hardness": 0.3,
+  "density": 20,
+  "digParticle": "dust",
+  "lightDecay": 0.88,
+  "tags": [
+    "stone"
+  ]
+}

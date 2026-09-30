@@ -1,0 +1,11 @@
+{
+  "name": "Stone Stairs",
+  "cellType": "solid",
+  "hardness": 0.58,
+  "density": 26,
+  "digParticle": "dust",
+  "lightDecay": 0.8,
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Moss",
+  "cellType": "plant",
+  "hardness": 0.05,
+  "density": 6,
+  "digParticle": "leaf",
+  "tags": [
+    "plant",
+    "soil"
+  ]
+}

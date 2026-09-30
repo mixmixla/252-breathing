@@ -1,0 +1,10 @@
+{
+  "name": "Sapling",
+  "cellType": "plant",
+  "hardness": 0.04,
+  "density": 3,
+  "digParticle": "leaf",
+  "tags": [
+    "plant"
+  ]
+}

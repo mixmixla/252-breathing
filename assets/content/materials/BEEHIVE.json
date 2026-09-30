@@ -1,0 +1,10 @@
+{
+  "name": "Beehive",
+  "cellType": "solid",
+  "hardness": 0.7,
+  "density": 20,
+  "digParticle": "dust",
+  "tags": [
+    "wood"
+  ]
+}

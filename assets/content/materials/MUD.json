@@ -1,0 +1,10 @@
+{
+  "name": "Mud",
+  "cellType": "powder",
+  "hardness": 0.4,
+  "density": 22,
+  "digParticle": "dust",
+  "tags": [
+    "soil"
+  ]
+}

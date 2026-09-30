@@ -1,0 +1,11 @@
+{
+  "name": "Cactus",
+  "cellType": "plant",
+  "hardness": 0.05,
+  "density": 8,
+  "digParticle": "leaf",
+  "tags": [
+    "plant",
+    "dry"
+  ]
+}

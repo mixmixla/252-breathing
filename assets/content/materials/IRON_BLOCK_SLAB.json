@@ -1,0 +1,11 @@
+{
+  "name": "Iron Block Slab",
+  "cellType": "solid",
+  "hardness": 0.94,
+  "density": 42,
+  "digParticle": "dust",
+  "lightDecay": 0.8,
+  "tags": [
+    "stone"
+  ]
+}

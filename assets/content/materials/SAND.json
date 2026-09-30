@@ -1,0 +1,10 @@
+{
+  "name": "Sand",
+  "cellType": "powder",
+  "hardness": 0.4,
+  "density": 20,
+  "digParticle": "dust",
+  "tags": [
+    "sand"
+  ]
+}

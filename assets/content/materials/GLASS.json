@@ -1,0 +1,10 @@
+{
+  "name": "Glass",
+  "cellType": "solid",
+  "hardness": 1.3,
+  "density": 15,
+  "digParticle": "spark",
+  "tags": [
+    "glass"
+  ]
+}

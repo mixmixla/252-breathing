@@ -1,0 +1,10 @@
+{
+  "name": "Soul Sand",
+  "cellType": "solid",
+  "hardness": 0.4,
+  "density": 16,
+  "digParticle": "dust",
+  "tags": [
+    "sand"
+  ]
+}

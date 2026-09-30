@@ -1,0 +1,10 @@
+{
+  "name": "Piston",
+  "cellType": "solid",
+  "hardness": 1.3,
+  "density": 36,
+  "digParticle": "dust",
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Fence",
+  "cellType": "solid",
+  "hardness": 0.55,
+  "density": 9,
+  "digParticle": "dust",
+  "tags": [
+    "wood"
+  ]
+}
